@@ -10,11 +10,28 @@ const TopToolbar = ({
   setShowDateFilter,
   showInstructorFilter,
   setShowInstructorFilter,
+  showServiceCategoryFilter,
+  setShowServiceCategoryFilter,
   activeView,
   setActiveView
 }) => {
-  const { dateFilter, instructorFilter } = usePayroll();
-  const views = ['All', 'Payroll', 'Classes', 'Instructors', 'Insights'];
+  const {
+    dateFilter,
+    instructorFilter,
+    serviceCategoryFilter,
+    activeDashboard,
+    setActiveDashboard,
+    hasPayrollData,
+    hasFirstVisitData
+  } = usePayroll();
+
+  // Views change based on active dashboard
+  const payrollViews = ['All', 'Payroll', 'Classes', 'Instructors', 'Insights'];
+  const clientViews = ['All', 'Acquisition', 'Retention', 'Referrals', 'Insights'];
+  const views = activeDashboard === 'payroll' ? payrollViews : clientViews;
+
+  const [showDashboardMenu, setShowDashboardMenu] = useState(false);
+  const dashboardMenuRef = useRef(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return document.body.classList.contains('dark-mode');
   });
@@ -28,13 +45,20 @@ const TopToolbar = ({
       if (exportRef.current && !exportRef.current.contains(event.target)) {
         setShowExportMenu(false);
       }
+      if (dashboardMenuRef.current && !dashboardMenuRef.current.contains(event.target)) {
+        setShowDashboardMenu(false);
+      }
     };
 
-    if (showExportMenu) {
+    if (showExportMenu || showDashboardMenu) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showExportMenu]);
+  }, [showExportMenu, showDashboardMenu]);
+
+  // Determine dashboard title
+  const dashboardTitle = activeDashboard === 'payroll' ? 'Payroll Dashboard' : 'Client Dashboard';
+  const canSwitchDashboard = hasPayrollData && hasFirstVisitData;
 
   const toggleDarkMode = () => {
     const newMode = !isDarkMode;
@@ -50,6 +74,14 @@ const TopToolbar = ({
   // Check if filters are active
   const hasDateFilter = dateFilter.startDate || dateFilter.endDate;
   const hasInstructorFilter = instructorFilter && instructorFilter.length > 0;
+  const hasServiceCategoryFilter = serviceCategoryFilter && serviceCategoryFilter.length > 0;
+
+  // Helper to close all filter panels
+  const closeAllFilters = () => {
+    setShowDateFilter(false);
+    setShowInstructorFilter(false);
+    if (setShowServiceCategoryFilter) setShowServiceCategoryFilter(false);
+  };
 
   // Format date range for display
   const formatDateRange = () => {
@@ -71,11 +103,39 @@ const TopToolbar = ({
   return (
     <div className="top-toolbar">
       <div className="toolbar-left">
-        {logo ? (
+        {logo && (
           <img src={logo} alt="Company Logo" className="toolbar-logo" />
-        ) : (
-          <span className="toolbar-title">Payroll Dashboard</span>
         )}
+        <div
+          className={`toolbar-title-container ${canSwitchDashboard ? 'has-menu' : ''}`}
+          ref={dashboardMenuRef}
+          onMouseEnter={() => canSwitchDashboard && setShowDashboardMenu(true)}
+          onMouseLeave={() => setShowDashboardMenu(false)}
+        >
+          <span className="toolbar-title">
+            {dashboardTitle}
+            {canSwitchDashboard && (
+              <span className="toolbar-title-arrow">{Icons.chevronDown}</span>
+            )}
+          </span>
+          {canSwitchDashboard && showDashboardMenu && (
+            <div className="toolbar-dashboard-menu">
+              {activeDashboard === 'payroll' ? (
+                <button
+                  onClick={() => { setActiveDashboard('client'); setActiveView('All'); setShowDashboardMenu(false); }}
+                >
+                  Switch to Client Dashboard
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setActiveDashboard('payroll'); setActiveView('All'); setShowDashboardMenu(false); }}
+                >
+                  Switch to Payroll Dashboard
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <nav className="toolbar-nav">
@@ -98,8 +158,9 @@ const TopToolbar = ({
         <button
           className={`toolbar-icon-btn ${showDateFilter ? 'active' : ''} ${hasDateFilter ? 'has-filter' : ''}`}
           onClick={() => {
-            setShowDateFilter(!showDateFilter);
-            if (!showDateFilter) setShowInstructorFilter(false);
+            const willShow = !showDateFilter;
+            closeAllFilters();
+            setShowDateFilter(willShow);
           }}
           title="Filter by Date Range"
         >
@@ -107,17 +168,37 @@ const TopToolbar = ({
           {hasDateFilter && <span className="filter-indicator" />}
         </button>
 
-        <button
-          className={`toolbar-icon-btn ${showInstructorFilter ? 'active' : ''} ${hasInstructorFilter ? 'has-filter' : ''}`}
-          onClick={() => {
-            setShowInstructorFilter(!showInstructorFilter);
-            if (!showInstructorFilter) setShowDateFilter(false);
-          }}
-          title="Filter by Instructor"
-        >
-          {Icons.user}
-          {hasInstructorFilter && <span className="filter-indicator" />}
-        </button>
+        {/* Instructor filter - Payroll Dashboard only */}
+        {activeDashboard === 'payroll' && (
+          <button
+            className={`toolbar-icon-btn ${showInstructorFilter ? 'active' : ''} ${hasInstructorFilter ? 'has-filter' : ''}`}
+            onClick={() => {
+              const willShow = !showInstructorFilter;
+              closeAllFilters();
+              setShowInstructorFilter(willShow);
+            }}
+            title="Filter by Instructor"
+          >
+            {Icons.user}
+            {hasInstructorFilter && <span className="filter-indicator" />}
+          </button>
+        )}
+
+        {/* Service Category filter - Client Dashboard only */}
+        {activeDashboard === 'client' && setShowServiceCategoryFilter && (
+          <button
+            className={`toolbar-icon-btn ${showServiceCategoryFilter ? 'active' : ''} ${hasServiceCategoryFilter ? 'has-filter' : ''}`}
+            onClick={() => {
+              const willShow = !showServiceCategoryFilter;
+              closeAllFilters();
+              setShowServiceCategoryFilter(willShow);
+            }}
+            title="Filter by Service Category"
+          >
+            {Icons.grid}
+            {hasServiceCategoryFilter && <span className="filter-indicator" />}
+          </button>
+        )}
 
         <div className="toolbar-divider" />
 

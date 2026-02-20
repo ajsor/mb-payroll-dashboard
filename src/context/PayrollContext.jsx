@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { parseExcelFile } from '../utils/excelParser';
 import { calculateMetrics } from '../utils/dataProcessor';
+import { parseFirstVisitFile, calculateFirstVisitMetrics } from '../utils/firstVisitParser';
 
 const PayrollContext = createContext(null);
 
@@ -15,21 +16,33 @@ export const usePayroll = () => {
 export const PayrollProvider = ({ children }) => {
   // File state
   const [excelFile, setExcelFile] = useState(null);
+  const [firstVisitFile, setFirstVisitFile] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreviewUrl, setLogoPreviewUrl] = useState(null);
-  
-  // Parsed data
+
+  // Parsed Payroll data
   const [dateRange, setDateRange] = useState(null);
   const [payrollData, setPayrollData] = useState([]);
 
-  // Filter state
+  // Parsed First Visit data
+  const [firstVisitData, setFirstVisitData] = useState([]);
+  const [firstVisitDateRange, setFirstVisitDateRange] = useState(null);
+  const [serviceCategories, setServiceCategories] = useState([]);
+  const [staffList, setStaffList] = useState([]);
+  const [referralTypes, setReferralTypes] = useState([]);
+
+  // Filter state (shared)
   const [dateFilter, setDateFilter] = useState({ startDate: null, endDate: null });
   const [instructorFilter, setInstructorFilter] = useState([]);
+
+  // Filter state (Client Dashboard specific)
+  const [serviceCategoryFilter, setServiceCategoryFilter] = useState([]);
+  const [staffFilter, setStaffFilter] = useState([]);
 
   // Classes to exclude by default
   const excludedClasses = ['Front Desk'];
 
-  // Filtered data (computed from payrollData, dateFilter, and instructorFilter)
+  // Filtered Payroll data
   const filteredPayrollData = useMemo(() => {
     const hasDateFilter = dateFilter.startDate || dateFilter.endDate;
     const hasInstructorFilter = instructorFilter.length > 0;
@@ -70,129 +83,248 @@ export const PayrollProvider = ({ children }) => {
     });
   }, [payrollData, dateFilter, instructorFilter]);
 
-  // Computed metrics (from filtered data)
+  // Filtered First Visit data
+  const filteredFirstVisitData = useMemo(() => {
+    const hasDateFilter = dateFilter.startDate || dateFilter.endDate;
+    const hasServiceCategoryFilter = serviceCategoryFilter.length > 0;
+    const hasStaffFilter = staffFilter.length > 0;
+
+    return firstVisitData.filter(row => {
+      // Service category filter
+      if (hasServiceCategoryFilter) {
+        if (!row.serviceCategory || !serviceCategoryFilter.includes(row.serviceCategory)) {
+          return false;
+        }
+      }
+
+      // Staff filter
+      if (hasStaffFilter) {
+        if (!row.staff || !staffFilter.includes(row.staff)) {
+          return false;
+        }
+      }
+
+      // Date filter (by first visit date)
+      if (hasDateFilter && row.firstVisitDateStr) {
+        try {
+          const [year, month, day] = row.firstVisitDateStr.split('-').map(Number);
+          const rowDate = new Date(year, month - 1, day);
+
+          if (dateFilter.startDate) {
+            const [sy, sm, sd] = dateFilter.startDate.split('-').map(Number);
+            const start = new Date(sy, sm - 1, sd);
+            if (rowDate < start) return false;
+          }
+
+          if (dateFilter.endDate) {
+            const [ey, em, ed] = dateFilter.endDate.split('-').map(Number);
+            const end = new Date(ey, em - 1, ed);
+            if (rowDate > end) return false;
+          }
+        } catch {
+          // Keep rows with invalid dates when date filter is active
+        }
+      }
+
+      return true;
+    });
+  }, [firstVisitData, dateFilter, serviceCategoryFilter, staffFilter]);
+
+  // Computed metrics (Payroll - from filtered data)
   const metrics = useMemo(() => {
     return calculateMetrics(filteredPayrollData);
   }, [filteredPayrollData]);
 
+  // Computed metrics (First Visit - from filtered data)
+  const firstVisitMetrics = useMemo(() => {
+    return calculateFirstVisitMetrics(filteredFirstVisitData);
+  }, [filteredFirstVisitData]);
+
   // UI state
   const [currentView, setCurrentView] = useState('upload');
+  const [activeDashboard, setActiveDashboard] = useState('payroll'); // 'payroll' or 'client'
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
+  // Computed: which dashboards are available based on parsed data
+  const hasPayrollData = payrollData.length > 0;
+  const hasFirstVisitData = firstVisitData.length > 0;
+
   /**
-   * Handle Excel file upload
+   * Handle Excel file upload (Payroll Report)
    */
   const handleExcelUpload = useCallback((file) => {
     setExcelFile(file);
     setError(null);
   }, []);
-  
+
+  /**
+   * Handle First Visit Report file upload
+   */
+  const handleFirstVisitUpload = useCallback((file) => {
+    setFirstVisitFile(file);
+    setError(null);
+  }, []);
+
   /**
    * Handle logo file upload
    */
   const handleLogoUpload = useCallback((file) => {
     setLogoFile(file);
-    
+
     // Create preview URL
     if (logoPreviewUrl) {
       URL.revokeObjectURL(logoPreviewUrl);
     }
-    
+
     const previewUrl = URL.createObjectURL(file);
     setLogoPreviewUrl(previewUrl);
     setError(null);
   }, [logoPreviewUrl]);
-  
+
   /**
-   * Process Excel file and parse data
+   * Process uploaded files and parse data
    */
   const processFiles = useCallback(async () => {
-    if (!excelFile) {
-      setError('Please upload an Excel file');
+    if (!excelFile && !firstVisitFile) {
+      setError('Please upload at least one report file');
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
-      // Parse Excel file
-      const result = await parseExcelFile(excelFile);
-      
-      // Update state
-      setDateRange(result.dateRange);
-      setPayrollData(result.payrollData);
+      // Parse Payroll Excel file if provided
+      if (excelFile) {
+        const result = await parseExcelFile(excelFile);
+        setDateRange(result.dateRange);
+        setPayrollData(result.payrollData);
+      }
+
+      // Parse First Visit file if provided
+      if (firstVisitFile) {
+        const result = await parseFirstVisitFile(firstVisitFile);
+        setFirstVisitData(result.firstVisitData);
+        setFirstVisitDateRange(result.dateRange);
+        setServiceCategories(result.serviceCategories);
+        setStaffList(result.staffList);
+        setReferralTypes(result.referralTypes);
+      }
+
+      // Set active dashboard based on what was uploaded
+      if (excelFile) {
+        setActiveDashboard('payroll');
+      } else if (firstVisitFile) {
+        setActiveDashboard('client');
+      }
 
       // Reset filters when loading new data
       setDateFilter({ startDate: null, endDate: null });
       setInstructorFilter([]);
+      setServiceCategoryFilter([]);
+      setStaffFilter([]);
 
       // Switch to dashboard view
       setCurrentView('dashboard');
-      
+
     } catch (err) {
-      console.error('Error processing Excel file:', err);
-      setError(err.message || 'Failed to process Excel file');
+      console.error('Error processing files:', err);
+      setError(err.message || 'Failed to process files');
     } finally {
       setIsLoading(false);
     }
-  }, [excelFile]);
-  
+  }, [excelFile, firstVisitFile]);
+
   /**
    * Reset to initial state
    */
   const resetApp = useCallback(() => {
     setExcelFile(null);
+    setFirstVisitFile(null);
     setLogoFile(null);
-    
+
     if (logoPreviewUrl) {
       URL.revokeObjectURL(logoPreviewUrl);
     }
     setLogoPreviewUrl(null);
-    
+
+    // Reset Payroll data
     setDateRange(null);
     setPayrollData([]);
+
+    // Reset First Visit data
+    setFirstVisitData([]);
+    setFirstVisitDateRange(null);
+    setServiceCategories([]);
+    setStaffList([]);
+    setReferralTypes([]);
+
+    // Reset filters
     setDateFilter({ startDate: null, endDate: null });
     setInstructorFilter([]);
+    setServiceCategoryFilter([]);
+    setStaffFilter([]);
 
+    setActiveDashboard('payroll');
     setCurrentView('upload');
     setError(null);
     setIsLoading(false);
   }, [logoPreviewUrl]);
-  
+
   const value = {
     // Files
     excelFile,
+    firstVisitFile,
     logoFile,
     logoPreviewUrl,
 
-    // Parsed data
+    // Parsed Payroll data
     dateRange,
-    payrollData, // Original unfiltered data
-    filteredPayrollData, // Filtered data (what charts/metrics should use)
+    payrollData,
+    filteredPayrollData,
 
-    // Filter state
+    // Parsed First Visit data
+    firstVisitData,
+    filteredFirstVisitData,
+    firstVisitDateRange,
+    serviceCategories,
+    staffList,
+    referralTypes,
+
+    // Filter state (shared)
     dateFilter,
     setDateFilter,
     instructorFilter,
     setInstructorFilter,
 
-    // Computed metrics (from filtered data)
+    // Filter state (Client Dashboard)
+    serviceCategoryFilter,
+    setServiceCategoryFilter,
+    staffFilter,
+    setStaffFilter,
+
+    // Computed metrics
     metrics,
+    firstVisitMetrics,
 
     // UI state
     currentView,
+    activeDashboard,
+    setActiveDashboard,
+    hasPayrollData,
+    hasFirstVisitData,
     isLoading,
     error,
 
     // Actions
     handleExcelUpload,
+    handleFirstVisitUpload,
     handleLogoUpload,
     processFiles,
     resetApp
   };
-  
+
   return (
     <PayrollContext.Provider value={value}>
       {children}

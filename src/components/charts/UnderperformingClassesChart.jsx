@@ -193,7 +193,7 @@ const UnderperformingClassesChart = () => {
                 <BarChart
                   data={belowAvgClasses.slice(0, 10)}
                   layout="vertical"
-                  margin={{ top: 10, right: 30, left: 120, bottom: 10 }}
+                  margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" domain={[0, 'dataMax + 2']} />
@@ -291,7 +291,7 @@ const UnderperformingClassesChart = () => {
                 <BarChart
                   data={decliningClasses.slice(0, 10)}
                   layout="vertical"
-                  margin={{ top: 10, right: 30, left: 120, bottom: 10 }}
+                  margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" domain={['dataMin - 5', 5]} tickFormatter={(v) => `${v}%`} />

@@ -1,6 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import { usePayroll } from '../../context/PayrollContext';
-import DatePresets from './DatePresets';
+
+// Inline DatePresets component
+const DatePresets = ({ onSelectPreset, dateExtent }) => {
+  const formatDate = (date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const getPresets = () => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentQuarter = Math.floor(currentMonth / 3);
+
+    const presets = [
+      {
+        label: 'This Year',
+        start: formatDate(new Date(currentYear, 0, 1)),
+        end: formatDate(new Date(currentYear, 11, 31))
+      },
+      {
+        label: 'Last Year',
+        start: formatDate(new Date(currentYear - 1, 0, 1)),
+        end: formatDate(new Date(currentYear - 1, 11, 31))
+      },
+      {
+        label: 'This Quarter',
+        start: formatDate(new Date(currentYear, currentQuarter * 3, 1)),
+        end: formatDate(new Date(currentYear, currentQuarter * 3 + 3, 0))
+      },
+      {
+        label: 'Last Quarter',
+        start: formatDate(new Date(currentYear, (currentQuarter - 1) * 3, 1)),
+        end: formatDate(new Date(currentYear, (currentQuarter - 1) * 3 + 3, 0))
+      },
+      {
+        label: 'This Month',
+        start: formatDate(new Date(currentYear, currentMonth, 1)),
+        end: formatDate(new Date(currentYear, currentMonth + 1, 0))
+      },
+      {
+        label: 'Last Month',
+        start: formatDate(new Date(currentYear, currentMonth - 1, 1)),
+        end: formatDate(new Date(currentYear, currentMonth, 0))
+      },
+      {
+        label: 'Last 90 Days',
+        start: formatDate(new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000)),
+        end: formatDate(today)
+      }
+    ];
+
+    // Add "All Time" if we have data extent
+    if (dateExtent?.min && dateExtent?.max) {
+      presets.push({
+        label: 'All Time',
+        start: formatDate(dateExtent.min),
+        end: formatDate(dateExtent.max)
+      });
+    }
+
+    return presets;
+  };
+
+  return (
+    <div className="date-presets">
+      {getPresets().map((preset) => (
+        <button
+          key={preset.label}
+          className="preset-button"
+          onClick={() => onSelectPreset({ start: preset.start, end: preset.end })}
+        >
+          {preset.label}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 const DateRangeFilter = ({ onApply }) => {
   const { dateFilter, setDateFilter, dateRange, payrollData } = usePayroll();

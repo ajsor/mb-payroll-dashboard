@@ -23,21 +23,21 @@ body {
 /* Upload Container Styles */
 .upload-container {
   max-width: 680px;
-  margin: 60px auto;
+  margin: 30px auto;
   padding: 0 1.5rem;
 }
 
 .upload-card {
   background: white;
   border-radius: 16px;
-  padding: 2.5rem;
+  padding: 1.25rem 2.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
 }
 
 .upload-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .upload-header-icon {
@@ -621,6 +621,7 @@ body.dark-mode .help-dialog-footer {
 .toolbar-left {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
 .toolbar-logo {
@@ -629,11 +630,61 @@ body.dark-mode .help-dialog-footer {
   object-fit: contain;
 }
 
+.toolbar-title-container {
+  position: relative;
+}
+
+.toolbar-title-container.has-menu {
+  cursor: pointer;
+}
+
 .toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   font-size: 1.125rem;
   font-weight: 600;
   color: #111827;
   letter-spacing: -0.01em;
+}
+
+.toolbar-title-arrow {
+  display: flex;
+  align-items: center;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.toolbar-title-container.has-menu:hover .toolbar-title-arrow {
+  opacity: 1;
+}
+
+.toolbar-dashboard-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 0.25rem;
+  z-index: 100;
+}
+
+.toolbar-dashboard-menu button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.toolbar-dashboard-menu button:hover {
+  background: #f3f4f6;
 }
 
 /* Toolbar Navigation */
@@ -818,6 +869,16 @@ body.dark-mode .top-toolbar {
 
 body.dark-mode .toolbar-title {
   color: #f1f5f9;
+}
+
+body.dark-mode .toolbar-dashboard-menu button {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .toolbar-dashboard-menu button:hover {
+  background: #334155;
 }
 
 body.dark-mode .toolbar-date-range {
@@ -1023,6 +1084,116 @@ body.dark-mode .summary-metric .metric-label {
   color: #999;
   padding: 4rem 2rem;
   font-size: 1.1rem;
+}
+
+.chart-placeholder {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+.chart-placeholder h3 {
+  color: #374151;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.chart-placeholder p {
+  color: #6b7280;
+  font-size: 0.9375rem;
+}
+
+/* Charts Grid Row - 2 column layout */
+.charts-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1200px) {
+  .charts-grid-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Scrollable chart container */
+.chart-scrollable {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.chart-header-row .chart-title {
+  margin-bottom: 0.25rem;
+}
+
+.chart-header-row .chart-subtitle {
+  margin-bottom: 0;
+}
+
+.chart-toggle-btn {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  color: #374151;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.chart-toggle-btn:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.chart-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  border-radius: 8px;
+}
+
+.chart-scroll-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chart-scroll-area::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.chart-scroll-area::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.chart-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+body.dark-mode .chart-placeholder {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .chart-placeholder h3 {
+  color: #f1f5f9;
+}
+
+body.dark-mode .chart-placeholder p {
+  color: #94a3b8;
 }
 
 .chart-subtitle {
@@ -1562,6 +1733,29 @@ body.dark-mode .chart-title {
 
 body.dark-mode .chart-subtitle {
   color: #a0a0a0;
+}
+
+body.dark-mode .chart-toggle-btn {
+  background: #334155;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+body.dark-mode .chart-toggle-btn:hover {
+  background: #475569;
+  border-color: #64748b;
+}
+
+body.dark-mode .chart-scroll-area::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+body.dark-mode .chart-scroll-area::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+body.dark-mode .chart-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 
 body.dark-mode .instructor-detail-table,
