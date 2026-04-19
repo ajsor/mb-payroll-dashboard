@@ -87,6 +87,11 @@ Port 5177 is in use, trying another one...
 
 ## Changelog
 
+### 2026-04-19 (2) — Phase 4b-i: App-scoped invitations
+- Any signed-in MB Dashboard user can now invite others to MB Dashboard only (not the portal). Invite button added to `TopToolbar` (userPlus icon).
+- `InviteModal` (new) collects email + optional personal note, calls `app-create-invitation` edge function. Handles both "invited" (token + email sent) and "granted_direct" (invitee already had a stonecode.ai account — flag granted, no signup needed) responses.
+- `AcceptInvitePage` rewritten from stub: looks up the invitation by token, auto-accepts if the visitor is already signed in with the invited email, otherwise shows a signup form pre-filled with the invited email. Supabase email confirmation is supported via `emailRedirectTo` pointing back to `/accept-invite?token=…`.
+
 ### 2026-04-19
 - **Phase 4a — Direct login + TypeScript conversion.** Project can now be logged into directly at `mb-dashboard.stonecode.ai/login` instead of only via portal deep-link.
 - Migrated JS → TS: `main.jsx`, `App.jsx`, `supabase.js`, `AuthGate.jsx`, `vite.config.js` → `.tsx/.ts` equivalents. Added `tsconfig.json` + `tsconfig.node.json` with `allowJs: true` for gradual migration of remaining `.jsx` component files.

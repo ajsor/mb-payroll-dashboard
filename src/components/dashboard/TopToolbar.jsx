@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { usePayroll } from '../../context/PayrollContext';
 import { Icons } from '../shared/Icons';
 import HelpDialog from './HelpDialog';
+import InviteModal from '../shared/InviteModal';
 
 const TopToolbar = ({
   logo,
@@ -37,6 +38,7 @@ const TopToolbar = ({
   });
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
   const exportRef = useRef(null);
 
   // Close export menu when clicking outside
@@ -241,6 +243,14 @@ const TopToolbar = ({
 
         <button
           className="toolbar-icon-btn"
+          onClick={() => setShowInvite(true)}
+          title="Invite a user to MB Dashboard"
+        >
+          {Icons.userPlus}
+        </button>
+
+        <button
+          className="toolbar-icon-btn"
           onClick={toggleDarkMode}
           title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
@@ -257,6 +267,7 @@ const TopToolbar = ({
       </div>
 
       {showHelp && <HelpDialog onClose={() => setShowHelp(false)} />}
+      <InviteModal open={showInvite} onClose={() => setShowInvite(false)} />
     </div>
   );
 };
