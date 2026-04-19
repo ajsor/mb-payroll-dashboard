@@ -76,11 +76,27 @@ Port 5177 is in use, trying another one...
 - Historical trend analysis
 
 ## Technical Stack
-- React 18 + Vite
+- React 18 + Vite + **TypeScript**
+- **React Router v7** (createBrowserRouter, lazy routes)
+- **@stonecode/portal-sdk** — shared Supabase client, hash-token session bootstrap, portal launch URL builder
+- Supabase Auth (storageKey `mb-auth` to avoid collision with other `*.stonecode.ai` apps)
 - xlsx (SheetJS) - Excel parsing
 - recharts - Charts
 - react-dropzone - File uploads
 - Context API - State management
+
+## Changelog
+
+### 2026-04-19
+- **Phase 4a — Direct login + TypeScript conversion.** Project can now be logged into directly at `mb-dashboard.stonecode.ai/login` instead of only via portal deep-link.
+- Migrated JS → TS: `main.jsx`, `App.jsx`, `supabase.js`, `AuthGate.jsx`, `vite.config.js` → `.tsx/.ts` equivalents. Added `tsconfig.json` + `tsconfig.node.json` with `allowJs: true` for gradual migration of remaining `.jsx` component files.
+- Adopted `@stonecode/portal-sdk`: `supabase.ts` now uses `createPortalSupabaseClient({ storageKey: 'mb-auth' })`; auth context uses `bootstrapSessionFromHash()` for portal handoff
+- Added React Router v7 with routes: `/login`, `/register`, `/accept-invite` (stub), `/app` (protected)
+- `ProtectedRoute` replaces `AuthGate` — redirects to `/login?redirect=<url>` if unauthenticated, shows inline Access Denied if `mb_dashboard` flag is missing
+- `LoginPage` supports both email+password and magic-link tabs; preserves `?redirect=<url>` param and forwards the freshly issued session to external URLs via `#access_token=…&refresh_token=…&type=portal` hash (same pattern used by portal→satellite handoff)
+- `RegisterPage` notes that `mb_dashboard` flag still requires admin approval (until Phase 4b ships app-scoped invitations)
+- `.gitignore` now ignores `.claude/` and `supabase/.temp/`
+- **Not yet done (Phase 4b):** Tailwind migration, Web Worker Excel parsing, `mb_invitations` table, `InviteModal`, create/accept edge functions
 
 ## Notes for Next Session
 Successfully parsing all 13,101 rows from 360 sheets with correct instructor names and date range filtering working perfectly.
