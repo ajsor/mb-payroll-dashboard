@@ -87,6 +87,13 @@ Port 5177 is in use, trying another one...
 
 ## Changelog
 
+### 2026-04-19 (3) — Phase 4b-iii: Web Worker Excel parsing
+- Moved the payroll Excel parser (300+ sheet workbooks) into a Web Worker so the UI thread stays responsive during upload. Before: the main thread would freeze for several seconds parsing the 360-sheet production file.
+- `src/workers/excelParser.worker.ts` (new): self-contained, TS-typed port of the old `src/utils/excelParser.js`. Receives `File`, calls `file.arrayBuffer()` off-main-thread, runs the two-pass instructor-section parse, posts back `{ dateRange, payrollData, rowCount }`.
+- `src/utils/parseExcelInWorker.ts` (new): thin wrapper exposing the same `parseExcelFile(file) → Promise<result>` surface as before, so `PayrollContext.jsx` only needed an import swap.
+- Old `src/utils/excelParser.js` removed.
+- Build output now splits the xlsx library into a 337 KB worker chunk loaded on-demand (main bundle unchanged — `firstVisitParser.js` and `ExportButtonHidden.jsx` still use xlsx on the main thread, but those operate on much smaller data).
+
 ### 2026-04-19 (2) — Phase 4b-i: App-scoped invitations
 - Any signed-in MB Dashboard user can now invite others to MB Dashboard only (not the portal). Invite button added to `TopToolbar` (userPlus icon).
 - `InviteModal` (new) collects email + optional personal note, calls `app-create-invitation` edge function. Handles both "invited" (token + email sent) and "granted_direct" (invitee already had a stonecode.ai account — flag granted, no signup needed) responses.

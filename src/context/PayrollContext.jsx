@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { parseExcelFile } from '../utils/excelParser';
+import { parseExcelFile } from '../utils/parseExcelInWorker';
 import { calculateMetrics } from '../utils/dataProcessor';
 import { parseFirstVisitFile, calculateFirstVisitMetrics } from '../utils/firstVisitParser';
 
