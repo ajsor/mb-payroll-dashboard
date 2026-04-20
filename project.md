@@ -87,7 +87,14 @@ Port 5177 is in use, trying another one...
 
 ## Changelog
 
-### 2026-04-19 (4) — Phase 4b-ii slice 1: Tailwind for auth surface
+### 2026-04-20 - Phase 4b-ii slice 2a: Tailwind for upload + dashboard chrome
+- Converted 12 chrome components from `Dashboard.css` classes to Tailwind utilities: `FileDropzone`, `FirstVisitDropzone`, `LogoDropzone`, `FileUploadContainer`, `Dashboard`, `TopToolbar`, `DateRangeFilter`, `InstructorFilter`, `ServiceCategoryFilter`, `SummaryCardsSectionModern`, `ClientSummaryCards`, `HelpDialog`. Visual parity preserved; indigo/violet palette unchanged.
+- Dark mode kept on the existing `document.body.classList.toggle('dark-mode')` mechanism. `src/index.css` now declares `@custom-variant dark (&:where(body.dark-mode *, .dark, .dark *))` so both the dashboard (`body.dark-mode`) and the auth pages (`.dark` on `<html>`) light up Tailwind `dark:` utilities.
+- `Dashboard.css` pruned from 2,396 to 827 lines. Removed all chrome rules no longer referenced by JSX (upload/dropzone/help-dialog/top-toolbar/filter-panel/summary-metrics/date-range-filter/instructor-filter/date-presets/header-actions/no-data/export-button/reset-button/dashboard-modern-etc) and their `body.dark-mode` overrides. Kept: `@keyframes spin`, `@keyframes dialogSlideIn`, global reset + `.app`, plus every chart class still used by the 23 chart components.
+- Build size: CSS 53 KB to 49 KB.
+- **Remaining for Phase 4b-ii (slice 2b):** migrate 23 chart components; strip final chart-specific rules from `Dashboard.css`.
+
+### 2026-04-19 (4) - Phase 4b-ii slice 1: Tailwind for auth surface
 - Installed Tailwind v4 (`tailwindcss@^4.1.18`, `@tailwindcss/vite@^4.1.18`) to match the stonecode.ai setup. `vite.config.ts` adds the `tailwindcss()` plugin; `src/index.css` starts with `@import "tailwindcss"` and declares the class-based dark variant (`@custom-variant dark`).
 - Converted 5 auth/modal files from inline-style objects to Tailwind classes: `LoginPage`, `RegisterPage`, `AcceptInvitePage`, `InviteModal`, `ProtectedRoute`. Visual parity preserved.
 - Dashboard.css / App.css untouched. Dashboard.css carries its own `* { margin: 0; padding: 0; }` reset, so Tailwind v4 Preflight is effectively a no-op for the dashboard surface.
