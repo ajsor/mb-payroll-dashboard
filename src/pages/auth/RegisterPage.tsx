@@ -37,17 +37,17 @@ export default function RegisterPage() {
 
   if (created) {
     return (
-      <div style={container}>
-        <div style={card}>
-          <h1 style={{ color: '#f1f5f9', fontSize: '20px', margin: '0 0 12px' }}>Check your email</h1>
-          <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: 1.6 }}>
+      <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900 font-sans">
+        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/60 p-8 backdrop-blur-xl">
+          <h1 className="m-0 mb-3 text-xl font-semibold text-slate-100">Check your email</h1>
+          <p className="text-sm leading-relaxed text-slate-400">
             We sent a verification link to <strong>{email}</strong>. Once you confirm, you&apos;ll be able to sign in.
           </p>
-          <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '20px' }}>
-            Note: your account needs the <code style={{ color: '#fb923c' }}>mb_dashboard</code> feature flag enabled
+          <p className="mt-5 text-[13px] text-slate-400">
+            Note: your account needs the <code className="text-orange-400">mb_dashboard</code> feature flag enabled
             by an administrator before you can view the dashboard.
           </p>
-          <Link to="/login" style={{ color: '#fb923c', fontSize: '14px', marginTop: '20px', display: 'inline-block' }}>
+          <Link to="/login" className="mt-5 inline-block text-sm text-orange-400 no-underline hover:underline">
             ← Back to sign in
           </Link>
         </div>
@@ -56,30 +56,32 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={container}>
-      <div style={card}>
-        <h1 style={{ color: '#f1f5f9', fontSize: '20px', margin: '0 0 6px' }}>Create account</h1>
-        <p style={{ color: '#94a3b8', fontSize: '13px', margin: '0 0 24px' }}>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900 font-sans">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/60 p-8 backdrop-blur-xl">
+        <h1 className="m-0 mb-1.5 text-xl font-semibold text-slate-100">Create account</h1>
+        <p className="m-0 mb-6 text-[13px] text-slate-400">
           Registration requires administrator approval for dashboard access.
         </p>
 
         {error && (
-          <div style={errorBox}>{error}</div>
+          <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-[13px] text-red-300">
+            {error}
+          </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <label style={label}>Email</label>
+          <label className="mb-1.5 mt-3 block text-xs font-medium text-slate-300">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            style={input}
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-400/50"
             placeholder="you@example.com"
           />
 
-          <label style={label}>Password</label>
+          <label className="mb-1.5 mt-3 block text-xs font-medium text-slate-300">Password</label>
           <input
             type="password"
             value={password}
@@ -87,17 +89,21 @@ export default function RegisterPage() {
             required
             minLength={8}
             autoComplete="new-password"
-            style={input}
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-400/50"
             placeholder="At least 8 characters"
           />
 
-          <button type="submit" disabled={submitting} style={{ ...submitBtn, ...(submitting ? disabledBtn : {}) }}>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="mt-5 w-full rounded-lg border-0 bg-gradient-to-br from-orange-400 to-orange-600 px-3 py-3 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+          >
             {submitting ? 'Creating…' : 'Create account'}
           </button>
         </form>
 
-        <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
-          <Link to="/login" style={{ color: '#fb923c', fontSize: '13px', textDecoration: 'none' }}>
+        <div className="mt-6 border-t border-white/10 pt-5 text-center">
+          <Link to="/login" className="text-[13px] text-orange-400 no-underline hover:underline">
             Already have an account? Sign in
           </Link>
         </div>
@@ -105,69 +111,3 @@ export default function RegisterPage() {
     </div>
   )
 }
-
-const container: React.CSSProperties = {
-  minHeight: '100vh',
-  backgroundColor: '#0f172a',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '24px',
-  fontFamily: 'system-ui, -apple-system, sans-serif',
-}
-
-const card: React.CSSProperties = {
-  width: '100%',
-  maxWidth: '420px',
-  background: 'rgba(15,23,42,0.6)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: '16px',
-  padding: '32px',
-  backdropFilter: 'blur(20px)',
-}
-
-const errorBox: React.CSSProperties = {
-  background: 'rgba(239,68,68,0.1)',
-  border: '1px solid rgba(239,68,68,0.3)',
-  color: '#fca5a5',
-  fontSize: '13px',
-  padding: '10px 12px',
-  borderRadius: '8px',
-  marginBottom: '16px',
-}
-
-const label: React.CSSProperties = {
-  display: 'block',
-  fontSize: '12px',
-  fontWeight: 500,
-  color: '#cbd5e1',
-  marginBottom: '6px',
-  marginTop: '12px',
-}
-
-const input: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 12px',
-  borderRadius: '8px',
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  color: '#f1f5f9',
-  fontSize: '14px',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
-const submitBtn: React.CSSProperties = {
-  width: '100%',
-  padding: '12px',
-  marginTop: '20px',
-  borderRadius: '8px',
-  border: 'none',
-  background: 'linear-gradient(135deg, #fb923c, #ea580c)',
-  color: 'white',
-  fontSize: '14px',
-  fontWeight: 600,
-  cursor: 'pointer',
-}
-
-const disabledBtn: React.CSSProperties = { opacity: 0.6, cursor: 'not-allowed' }

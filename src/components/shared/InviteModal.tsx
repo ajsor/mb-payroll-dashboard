@@ -77,29 +77,50 @@ export default function InviteModal({ open, onClose }: Props) {
   const submitting = status.kind === 'submitting'
 
   return (
-    <div style={backdrop} onClick={onClose}>
-      <div style={card} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
-        <div style={header}>
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-slate-200 shadow-[0_24px_72px_rgba(0,0,0,0.5)] font-sans"
+      >
+        <div className="mb-5 flex items-start justify-between gap-4">
           <div>
-            <h2 style={title}>Invite to MB Dashboard</h2>
-            <p style={subtitle}>They'll get dashboard access only — not the full portal.</p>
+            <h2 className="m-0 text-lg font-semibold text-slate-100">Invite to MB Dashboard</h2>
+            <p className="m-0 mt-1 text-[13px] text-slate-400">
+              They&apos;ll get dashboard access only — not the full portal.
+            </p>
           </div>
-          <button type="button" onClick={onClose} style={closeBtn} aria-label="Close">×</button>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="border-0 bg-transparent px-1 text-2xl leading-none text-slate-500 cursor-pointer hover:text-slate-300"
+          >
+            ×
+          </button>
         </div>
 
         {status.kind === 'success' ? (
-          <div style={successBox}>
-            <div style={{ color: '#22c55e', fontWeight: 600, marginBottom: 8 }}>
+          <div className="rounded-xl border border-green-500/25 bg-green-500/10 p-4">
+            <div className="mb-2 font-semibold text-green-500">
               {status.mode === 'granted_direct' ? 'Access granted' : 'Invitation sent'}
             </div>
-            <p style={{ color: '#cbd5e1', fontSize: 14, margin: '0 0 16px', lineHeight: 1.6 }}>
-              {status.message}
-            </p>
-            <button type="button" onClick={onClose} style={primaryBtn}>Done</button>
+            <p className="m-0 mb-4 text-sm leading-relaxed text-slate-300">{status.message}</p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg border-0 bg-gradient-to-br from-orange-400 to-orange-600 px-4 py-2.5 text-sm font-semibold text-white cursor-pointer"
+            >
+              Done
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <label style={label}>
+            <label className="mb-4 block text-[13px] font-medium text-slate-300">
               Email
               <input
                 type="email"
@@ -108,32 +129,43 @@ export default function InviteModal({ open, onClose }: Props) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="colleague@example.com"
-                style={input}
                 disabled={submitting}
+                className="mt-1.5 block w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-400/50 box-border"
               />
             </label>
 
-            <label style={label}>
-              Personal note <span style={{ color: '#64748b', fontWeight: 400 }}>(optional)</span>
+            <label className="mb-4 block text-[13px] font-medium text-slate-300">
+              Personal note <span className="font-normal text-slate-500">(optional)</span>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Hey — I set this up for us to track instructor earnings. Link below."
-                style={{ ...input, minHeight: 72, resize: 'vertical', fontFamily: 'inherit' }}
                 disabled={submitting}
                 maxLength={500}
+                className="mt-1.5 block min-h-[72px] w-full resize-y rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-400/50 font-sans box-border"
               />
             </label>
 
             {status.kind === 'error' && (
-              <div style={errorBox}>{status.message}</div>
+              <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-[13px] leading-relaxed text-red-300">
+                {status.message}
+              </div>
             )}
 
-            <div style={actions}>
-              <button type="button" onClick={onClose} style={secondaryBtn} disabled={submitting}>
+            <div className="mt-2 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={submitting}
+                className="rounded-lg border border-white/10 bg-transparent px-4 py-2.5 text-sm font-medium text-slate-300 cursor-pointer hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
+              >
                 Cancel
               </button>
-              <button type="submit" style={primaryBtn} disabled={submitting || !email}>
+              <button
+                type="submit"
+                disabled={submitting || !email}
+                className="rounded-lg border-0 bg-gradient-to-br from-orange-400 to-orange-600 px-4 py-2.5 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+              >
                 {submitting ? 'Sending…' : 'Send invitation'}
               </button>
             </div>
@@ -142,127 +174,4 @@ export default function InviteModal({ open, onClose }: Props) {
       </div>
     </div>
   )
-}
-
-const backdrop: React.CSSProperties = {
-  position: 'fixed',
-  inset: 0,
-  background: 'rgba(2, 6, 23, 0.72)',
-  backdropFilter: 'blur(4px)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  zIndex: 1000,
-  padding: 16,
-}
-
-const card: React.CSSProperties = {
-  width: '100%',
-  maxWidth: 440,
-  background: 'rgba(15, 23, 42, 0.95)',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
-  borderRadius: 16,
-  padding: 24,
-  boxShadow: '0 24px 72px rgba(0, 0, 0, 0.5)',
-  color: '#e2e8f0',
-  fontFamily: 'system-ui, -apple-system, sans-serif',
-}
-
-const header: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  marginBottom: 20,
-  gap: 16,
-}
-
-const title: React.CSSProperties = {
-  color: '#f1f5f9',
-  fontSize: 18,
-  fontWeight: 600,
-  margin: 0,
-}
-
-const subtitle: React.CSSProperties = {
-  color: '#94a3b8',
-  fontSize: 13,
-  margin: '4px 0 0',
-}
-
-const closeBtn: React.CSSProperties = {
-  background: 'transparent',
-  border: 'none',
-  color: '#64748b',
-  fontSize: 24,
-  lineHeight: 1,
-  cursor: 'pointer',
-  padding: '0 4px',
-}
-
-const label: React.CSSProperties = {
-  display: 'block',
-  color: '#cbd5e1',
-  fontSize: 13,
-  fontWeight: 500,
-  marginBottom: 16,
-}
-
-const input: React.CSSProperties = {
-  display: 'block',
-  width: '100%',
-  marginTop: 6,
-  padding: '10px 12px',
-  background: 'rgba(15, 23, 42, 0.6)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  borderRadius: 8,
-  color: '#f1f5f9',
-  fontSize: 14,
-  boxSizing: 'border-box',
-}
-
-const errorBox: React.CSSProperties = {
-  background: 'rgba(239, 68, 68, 0.1)',
-  border: '1px solid rgba(239, 68, 68, 0.3)',
-  color: '#fca5a5',
-  borderRadius: 8,
-  padding: '10px 12px',
-  fontSize: 13,
-  marginBottom: 16,
-  lineHeight: 1.5,
-}
-
-const successBox: React.CSSProperties = {
-  background: 'rgba(34, 197, 94, 0.08)',
-  border: '1px solid rgba(34, 197, 94, 0.25)',
-  borderRadius: 10,
-  padding: 16,
-}
-
-const actions: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: 8,
-  marginTop: 8,
-}
-
-const primaryBtn: React.CSSProperties = {
-  padding: '10px 18px',
-  background: 'linear-gradient(135deg, #f97316, #f59e0b)',
-  color: '#fff',
-  border: 'none',
-  borderRadius: 8,
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: 'pointer',
-}
-
-const secondaryBtn: React.CSSProperties = {
-  padding: '10px 18px',
-  background: 'transparent',
-  color: '#cbd5e1',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  borderRadius: 8,
-  fontSize: 14,
-  fontWeight: 500,
-  cursor: 'pointer',
 }

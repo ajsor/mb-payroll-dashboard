@@ -55,211 +55,95 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={container}>
-      <div style={card}>
-        <div style={logoRow}>
-          <div style={logoBadge}>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900 font-sans">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/60 p-8 backdrop-blur-xl">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="16 18 22 12 16 6" />
               <polyline points="8 6 2 12 8 18" />
             </svg>
           </div>
           <div>
-            <p style={logoTitle}>MB Payroll Dashboard</p>
-            <p style={logoSubtitle}>Sign in to continue</p>
+            <p className="m-0 text-[15px] font-semibold text-slate-100">MB Payroll Dashboard</p>
+            <p className="mt-0.5 text-[13px] text-slate-400">Sign in to continue</p>
           </div>
         </div>
 
-        <div style={tabRow}>
+        <div className="mb-5 flex gap-1 rounded-lg bg-white/5 p-1">
           {(['password', 'magic'] as const).map((m) => (
             <button
               key={m}
               type="button"
               onClick={() => { setMode(m); setError(null); setMagicSent(false) }}
-              style={{ ...tabButton, ...(mode === m ? tabActive : {}) }}
+              className={`flex-1 rounded-md border-0 px-2 py-2 text-[13px] font-medium cursor-pointer transition-colors ${
+                mode === m
+                  ? 'bg-white/10 text-slate-100'
+                  : 'bg-transparent text-slate-400 hover:text-slate-200'
+              }`}
             >
               {m === 'password' ? 'Password' : 'Magic Link'}
             </button>
           ))}
         </div>
 
-        {error && <div style={errorBox}>{error}</div>}
+        {error && (
+          <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-[13px] text-red-300">
+            {error}
+          </div>
+        )}
 
         {magicSent ? (
-          <div style={{ textAlign: 'center', padding: '16px 0' }}>
-            <p style={{ color: '#f1f5f9', fontSize: 15, margin: '0 0 8px' }}>Check your email.</p>
-            <p style={{ color: '#94a3b8', fontSize: 13, margin: 0 }}>
+          <div className="py-4 text-center">
+            <p className="m-0 mb-2 text-[15px] text-slate-100">Check your email.</p>
+            <p className="m-0 text-[13px] text-slate-400">
               We sent a sign-in link to <strong>{email}</strong>.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <label style={label}>Email</label>
+            <label className="mb-1.5 mt-3 block text-xs font-medium text-slate-300">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              style={input}
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-400/50"
               placeholder="you@example.com"
             />
 
             {mode === 'password' && (
               <>
-                <label style={label}>Password</label>
+                <label className="mb-1.5 mt-3 block text-xs font-medium text-slate-300">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  style={input}
+                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-400/50"
                   placeholder="••••••••"
                 />
               </>
             )}
 
-            <button type="submit" disabled={submitting} style={{ ...submitBtn, ...(submitting ? disabledBtn : {}) }}>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="mt-5 w-full rounded-lg border-0 bg-gradient-to-br from-orange-400 to-orange-600 px-3 py-3 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+            >
               {submitting ? 'Signing in…' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
             </button>
           </form>
         )}
 
-        <div style={footerRow}>
-          <Link to="/register" style={footerLink}>Create an account</Link>
-          <span style={{ color: '#475569' }}>•</span>
-          <a href="https://stonecode.ai" style={footerLink}>stonecode.ai</a>
+        <div className="mt-6 flex items-center justify-center gap-3 border-t border-white/10 pt-5 text-xs">
+          <Link to="/register" className="text-orange-400 no-underline hover:underline">Create an account</Link>
+          <span className="text-slate-600">•</span>
+          <a href="https://stonecode.ai" className="text-orange-400 no-underline hover:underline">stonecode.ai</a>
         </div>
       </div>
     </div>
   )
-}
-
-const container: React.CSSProperties = {
-  minHeight: '100vh',
-  backgroundColor: '#0f172a',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '24px',
-  fontFamily: 'system-ui, -apple-system, sans-serif',
-}
-
-const card: React.CSSProperties = {
-  width: '100%',
-  maxWidth: '420px',
-  background: 'rgba(15,23,42,0.6)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: '16px',
-  padding: '32px',
-  backdropFilter: 'blur(20px)',
-}
-
-const logoRow: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '12px',
-  marginBottom: '24px',
-}
-
-const logoBadge: React.CSSProperties = {
-  width: '40px',
-  height: '40px',
-  borderRadius: '12px',
-  background: 'linear-gradient(135deg, #fb923c, #ea580c)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: 'white',
-}
-
-const logoTitle: React.CSSProperties = { color: '#f1f5f9', fontSize: '15px', fontWeight: 600, margin: 0 }
-const logoSubtitle: React.CSSProperties = { color: '#94a3b8', fontSize: '13px', margin: '2px 0 0' }
-
-const tabRow: React.CSSProperties = {
-  display: 'flex',
-  background: 'rgba(255,255,255,0.04)',
-  borderRadius: '10px',
-  padding: '4px',
-  marginBottom: '20px',
-}
-
-const tabButton: React.CSSProperties = {
-  flex: 1,
-  padding: '8px',
-  background: 'transparent',
-  border: 'none',
-  color: '#94a3b8',
-  fontSize: '13px',
-  fontWeight: 500,
-  cursor: 'pointer',
-  borderRadius: '6px',
-}
-
-const tabActive: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.08)',
-  color: '#f1f5f9',
-}
-
-const errorBox: React.CSSProperties = {
-  background: 'rgba(239,68,68,0.1)',
-  border: '1px solid rgba(239,68,68,0.3)',
-  color: '#fca5a5',
-  fontSize: '13px',
-  padding: '10px 12px',
-  borderRadius: '8px',
-  marginBottom: '16px',
-}
-
-const label: React.CSSProperties = {
-  display: 'block',
-  fontSize: '12px',
-  fontWeight: 500,
-  color: '#cbd5e1',
-  marginBottom: '6px',
-  marginTop: '12px',
-}
-
-const input: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 12px',
-  borderRadius: '8px',
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  color: '#f1f5f9',
-  fontSize: '14px',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
-const submitBtn: React.CSSProperties = {
-  width: '100%',
-  padding: '12px',
-  marginTop: '20px',
-  borderRadius: '8px',
-  border: 'none',
-  background: 'linear-gradient(135deg, #fb923c, #ea580c)',
-  color: 'white',
-  fontSize: '14px',
-  fontWeight: 600,
-  cursor: 'pointer',
-}
-
-const disabledBtn: React.CSSProperties = { opacity: 0.6, cursor: 'not-allowed' }
-
-const footerRow: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: '12px',
-  marginTop: '24px',
-  paddingTop: '20px',
-  borderTop: '1px solid rgba(255,255,255,0.06)',
-  fontSize: '12px',
-}
-
-const footerLink: React.CSSProperties = {
-  color: '#fb923c',
-  textDecoration: 'none',
 }

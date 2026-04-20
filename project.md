@@ -87,6 +87,13 @@ Port 5177 is in use, trying another one...
 
 ## Changelog
 
+### 2026-04-19 (4) — Phase 4b-ii slice 1: Tailwind for auth surface
+- Installed Tailwind v4 (`tailwindcss@^4.1.18`, `@tailwindcss/vite@^4.1.18`) to match the stonecode.ai setup. `vite.config.ts` adds the `tailwindcss()` plugin; `src/index.css` starts with `@import "tailwindcss"` and declares the class-based dark variant (`@custom-variant dark`).
+- Converted 5 auth/modal files from inline-style objects to Tailwind classes: `LoginPage`, `RegisterPage`, `AcceptInvitePage`, `InviteModal`, `ProtectedRoute`. Visual parity preserved.
+- Dashboard.css / App.css untouched. Dashboard.css carries its own `* { margin: 0; padding: 0; }` reset, so Tailwind v4 Preflight is effectively a no-op for the dashboard surface.
+- Build size: CSS 39 KB → 53 KB (+14 KB for utilities); per-page auth JS chunks shrunk by ~0.1–0.5 KB each with inline style objects removed.
+- **Remaining for Phase 4b-ii:** migrate the dashboard surface itself (`Dashboard.css`, 2400 lines + ~15 components).
+
 ### 2026-04-19 (3) — Phase 4b-iii: Web Worker Excel parsing
 - Moved the payroll Excel parser (300+ sheet workbooks) into a Web Worker so the UI thread stays responsive during upload. Before: the main thread would freeze for several seconds parsing the 360-sheet production file.
 - `src/workers/excelParser.worker.ts` (new): self-contained, TS-typed port of the old `src/utils/excelParser.js`. Receives `File`, calls `file.arrayBuffer()` off-main-thread, runs the two-pass instructor-section parse, posts back `{ dateRange, payrollData, rowCount }`.
