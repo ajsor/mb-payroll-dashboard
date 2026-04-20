@@ -37,38 +37,44 @@ const FirstVisitDropzone = () => {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  const dzState = firstVisitFile
+    ? 'border-solid border-emerald-500 bg-emerald-50 hover:border-emerald-600 hover:bg-emerald-100 dark:border-emerald-500 dark:bg-emerald-900/40'
+    : isDragActive
+      ? 'border-solid border-indigo-500 bg-violet-100 dark:border-indigo-500 dark:bg-indigo-950/60'
+      : 'border-dashed border-gray-300 bg-neutral-50 hover:border-indigo-500 hover:bg-violet-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:border-indigo-500 dark:hover:bg-indigo-950/50';
+
   return (
-    <div className="dropzone-container">
-      <div className="dropzone-label">
-        <span className="dropzone-label-icon">{Icons.spreadsheet}</span>
-        <h3>MindBody First Visit Report</h3>
+    <div className="flex flex-col">
+      <div className="flex items-center gap-2 mb-2.5">
+        <span className="w-5 h-5 text-gray-500 dark:text-slate-400">{Icons.spreadsheet}</span>
+        <h3 className="text-sm font-medium text-gray-700 dark:text-slate-200 m-0">MindBody First Visit Report</h3>
       </div>
       <div
         {...getRootProps()}
-        className={`dropzone ${isDragActive ? 'dropzone-active' : ''} ${firstVisitFile ? 'dropzone-has-file' : ''}`}
+        className={`group flex items-center justify-center min-h-[140px] rounded-xl border-2 p-8 px-6 text-center cursor-pointer transition-all ${dzState}`}
       >
         <input {...getInputProps()} />
         {firstVisitFile ? (
-          <div className="dropzone-content">
-            <div className="file-info">
-              <div className="file-icon-wrapper">
+          <div className="flex w-full flex-col items-center">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-emerald-500 text-white">
                 {Icons.fileCheck}
               </div>
-              <div className="file-details">
-                <p className="file-name">{firstVisitFile.name}</p>
-                <p className="file-meta">{formatFileSize(firstVisitFile.size)} - Click to replace</p>
+              <div className="min-w-0 text-left">
+                <p className="m-0 mb-0.5 break-words text-sm font-medium text-gray-900 dark:text-slate-100">{firstVisitFile.name}</p>
+                <p className="m-0 text-xs text-gray-500 dark:text-slate-400">{formatFileSize(firstVisitFile.size)} - Click to replace</p>
               </div>
             </div>
           </div>
         ) : (
-          <div className="dropzone-content">
-            <div className="dropzone-icon">{Icons.upload}</div>
-            <p className="dropzone-text">
+          <div className="flex w-full flex-col items-center">
+            <div className="w-10 h-10 mb-3.5 text-gray-400 transition-colors group-hover:text-indigo-500 dark:text-slate-500 dark:group-hover:text-indigo-400">{Icons.upload}</div>
+            <p className="mb-1.5 text-[15px] font-medium text-gray-700 dark:text-slate-200">
               {isDragActive
                 ? 'Drop file here...'
-                : <>Drag & drop or <span>browse</span></>}
+                : <>Drag & drop or <span className="text-indigo-500">browse</span></>}
             </p>
-            <p className="dropzone-hint">Supports .xls and .xlsx (max 10MB)</p>
+            <p className="text-[13px] text-gray-400 dark:text-slate-500">Supports .xls and .xlsx (max 10MB)</p>
           </div>
         )}
       </div>

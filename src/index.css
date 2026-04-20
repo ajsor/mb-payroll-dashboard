@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* Use class-based dark mode (.dark on <html>) to match the rest of the suite. */
-@custom-variant dark (&:where(.dark, .dark *));
+/* Dark mode activated by `body.dark-mode` (toggled from TopToolbar). Also accept `.dark` on <html> for auth pages. */
+@custom-variant dark (&:where(body.dark-mode *, .dark, .dark *));
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

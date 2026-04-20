@@ -49,22 +49,23 @@ const Dashboard = () => {
   const [showServiceCategoryFilter, setShowServiceCategoryFilter] = useState(false);
   const [activeView, setActiveView] = useState('All');
 
-  // Helper to check if a chart should be shown for the current view (Payroll Dashboard)
   const shouldShowPayrollChart = (chartCategories) => {
     if (activeView === 'All') return true;
     return chartCategories.includes(activeView);
   };
 
-  // Helper to check if a chart should be shown for the current view (Client Dashboard)
   const shouldShowClientChart = (chartCategories) => {
     if (activeView === 'All') return true;
     return chartCategories.includes(activeView);
   };
 
-  // Check if we have data for the active dashboard
   const hasDataForActiveDashboard =
     (activeDashboard === 'payroll' && hasPayrollData) ||
     (activeDashboard === 'client' && hasFirstVisitData);
+
+  const panelBase = 'overflow-hidden bg-white transition-[max-height,padding] duration-300 border-b border-transparent dark:bg-slate-800';
+  const panelOpen = 'max-h-[400px] border-b-gray-200 dark:border-b-slate-700';
+  const panelClosed = 'max-h-0';
 
   if (!hasDataForActiveDashboard) {
     const message = activeDashboard === 'payroll'
@@ -72,7 +73,7 @@ const Dashboard = () => {
       : 'Please upload a valid First Visit Report to view the Client Dashboard.';
 
     return (
-      <div className="dashboard-modern">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
         <TopToolbar
           logo={logoPreviewUrl}
           onUploadClick={resetApp}
@@ -85,16 +86,16 @@ const Dashboard = () => {
           activeView={activeView}
           setActiveView={setActiveView}
         />
-        <div className="no-data">
-          <h2>No Data Available</h2>
-          <p>{message}</p>
+        <div className="text-center px-8 py-16">
+          <h2 className="text-[2rem] text-gray-800 mb-4 dark:text-slate-100">No Data Available</h2>
+          <p className="text-[1.1rem] text-gray-500 dark:text-slate-400">{message}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-modern">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <TopToolbar
         logo={logoPreviewUrl}
         onUploadClick={resetApp}
@@ -109,18 +110,18 @@ const Dashboard = () => {
       />
 
       {/* Collapsible Filter Panels */}
-      <div className={`filter-panel ${showDateFilter ? 'open' : ''}`}>
+      <div className={`${panelBase} ${showDateFilter ? panelOpen : panelClosed}`}>
         <DateRangeFilter onApply={() => setShowDateFilter(false)} />
       </div>
 
       {activeDashboard === 'payroll' && (
-        <div className={`filter-panel ${showInstructorFilter ? 'open' : ''}`}>
+        <div className={`${panelBase} ${showInstructorFilter ? panelOpen : panelClosed}`}>
           <InstructorFilter onApply={() => setShowInstructorFilter(false)} />
         </div>
       )}
 
       {activeDashboard === 'client' && (
-        <div className={`filter-panel ${showServiceCategoryFilter ? 'open' : ''}`}>
+        <div className={`${panelBase} ${showServiceCategoryFilter ? panelOpen : panelClosed}`}>
           <ServiceCategoryFilter onApply={() => setShowServiceCategoryFilter(false)} />
         </div>
       )}
@@ -128,32 +129,28 @@ const Dashboard = () => {
       {/* Hidden export buttons for toolbar triggers */}
       <ExportButtonHidden />
 
-      <div className="dashboard-content">
+      <div className="max-w-[1600px] mx-auto px-8 pt-6 pb-8">
         {/* Payroll Dashboard */}
         {activeDashboard === 'payroll' && (
           <>
             <SummaryCardsSectionModern />
 
             <div className="charts-section">
-              {/* Payroll Charts */}
               {shouldShowPayrollChart(['Payroll']) && <TopEarnersChart />}
               {shouldShowPayrollChart(['Payroll']) && <PayrollByMonthChart />}
 
-              {/* Classes Charts */}
               {shouldShowPayrollChart(['Classes']) && <PopularClassesChart />}
               {shouldShowPayrollChart(['Classes']) && <AttendanceHeatmap />}
               {shouldShowPayrollChart(['Classes']) && <AttendanceTrendsChart />}
               {shouldShowPayrollChart(['Classes']) && <SessionsByMonthChart />}
               {shouldShowPayrollChart(['Classes']) && <ClassFrequencyChart />}
 
-              {/* Instructors Charts */}
               {shouldShowPayrollChart(['Instructors']) && <TopAttendanceChart />}
               {shouldShowPayrollChart(['Instructors']) && <InstructorConsistencyChart />}
               {shouldShowPayrollChart(['Instructors']) && <InstructorWorkloadChart />}
               {shouldShowPayrollChart(['Instructors']) && <AttendanceGrowthChart />}
               {shouldShowPayrollChart(['Instructors']) && <InstructorComparisonChart />}
 
-              {/* Insights Charts */}
               {shouldShowPayrollChart(['Insights']) && <YearOverYearChart />}
               {shouldShowPayrollChart(['Insights']) && <PeakHoursChart />}
               {shouldShowPayrollChart(['Insights']) && <UnderperformingClassesChart />}
@@ -167,19 +164,15 @@ const Dashboard = () => {
             <ClientSummaryCards />
 
             <div className="charts-section">
-              {/* Acquisition Charts */}
               {shouldShowClientChart(['Acquisition']) && <NewClientsByMonthChart />}
               {shouldShowClientChart(['Acquisition']) && <NewClientsByCategoryChart />}
 
-              {/* Retention Charts - 2 Column Grid Layout */}
               {shouldShowClientChart(['Retention']) && (
                 <>
-                  {/* Row 1: Client Retention (pie) | Retention by Class Type */}
                   <div className="charts-grid-row">
                     <RetentionFunnelChart />
                     <RetentionByClassChart />
                   </div>
-                  {/* Row 2: Retention by Instructor (scrollable) | Retention by Class (scrollable) */}
                   <div className="charts-grid-row">
                     <RetentionByInstructorChart />
                     <RetentionByClassNameChart />
@@ -187,7 +180,6 @@ const Dashboard = () => {
                 </>
               )}
 
-              {/* Referrals Charts */}
               {shouldShowClientChart(['Referrals']) && <ReferralSourceChart />}
               {shouldShowClientChart(['Referrals', 'Insights']) && <RetentionByReferralChart />}
             </div>
