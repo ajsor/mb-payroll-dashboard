@@ -39,7 +39,18 @@ export default function RegisterPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900 font-sans">
         <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/60 p-8 backdrop-blur-xl">
-          <h1 className="m-0 mb-3 text-xl font-semibold text-slate-100">Check your email</h1>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </div>
+            <div>
+              <p className="m-0 text-[15px] font-semibold text-slate-100">MB Payroll Dashboard</p>
+              <p className="mt-0.5 text-[13px] text-slate-400">Check your email</p>
+            </div>
+          </div>
           <p className="text-sm leading-relaxed text-slate-400">
             We sent a verification link to <strong>{email}</strong>. Once you confirm, you&apos;ll be able to sign in.
           </p>
@@ -58,7 +69,19 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900 font-sans">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/60 p-8 backdrop-blur-xl">
-        <h1 className="m-0 mb-1.5 text-xl font-semibold text-slate-100">Create account</h1>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </div>
+          <div>
+            <p className="m-0 text-[15px] font-semibold text-slate-100">MB Payroll Dashboard</p>
+            <p className="mt-0.5 text-[13px] text-slate-400">Create an account</p>
+          </div>
+        </div>
+
         <p className="m-0 mb-6 text-[13px] text-slate-400">
           Registration requires administrator approval for dashboard access.
         </p>
