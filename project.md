@@ -87,6 +87,10 @@ Port 5177 is in use, trying another one...
 
 ## Changelog
 
+### 2026-04-20 (3) - Bump GitHub Actions to v5 (Node 24 runtime)
+- `.github/workflows/deploy.yml`: `actions/checkout@v4` to `@v5`, `actions/setup-node@v4` to `@v5`. Silences the Node.js 20 deprecation warning GitHub emits on every run. Node.js 20 support is being removed from the runner on 2026-09-16; v5 of these actions runs on Node.js 24.
+- Build `node-version: '20'` unchanged — that's the build target, unrelated to the action runtime warning.
+
 ### 2026-04-20 (2) - Phase 4b-ii slice 2b: Tailwind for all 23 chart components
 - Converted every chart component from `Dashboard.css` classes to Tailwind utilities via a shared `src/styles/chartClasses.js` constants module. Migrated: PayrollByMonth, SessionsByMonth, NewClientsByMonth, NewClientsByCategory, ReferralSource, AttendanceTrends, RetentionByClass, RetentionByClassName, RetentionByInstructor, RetentionByReferral, RetentionFunnel, TopEarners, TopAttendance, InstructorConsistency, PopularClasses, AttendanceGrowth, YearOverYear, UnderperformingClasses, InstructorWorkload, ClassFrequency, AttendanceHeatmap, InstructorComparison, PeakHours.
 - `Dashboard.css` deleted entirely (from 827 lines to 0). Its survivors live in `src/index.css` now: global reset, body, `@keyframes dialogSlideIn`, and a minimal print rule. The `.app` class became `min-h-screen`. `.spin` became Tailwind's built-in `animate-spin`. `.charts-section` and `.charts-grid-row` became inline Tailwind grid utilities in `Dashboard.jsx`. No `import './styles/Dashboard.css'` remains.
