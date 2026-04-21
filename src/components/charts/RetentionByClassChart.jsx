@@ -10,6 +10,7 @@ import {
   Cell
 } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty } from '../../styles/chartClasses';
 
 const RetentionByClassChart = () => {
   const { filteredFirstVisitData } = usePayroll();
@@ -63,9 +64,9 @@ const RetentionByClassChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Retention by Class Type</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Retention by Class Type</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
@@ -73,9 +74,9 @@ const RetentionByClassChart = () => {
   const chartHeight = Math.max(350, chartData.length * 35 + 80);
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Retention by Class Type</h3>
-      <p className="chart-subtitle">Average return visits by first class service category</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Retention by Class Type</h3>
+      <p className={chartSubtitle}>Average return visits by first class service category</p>
       <ResponsiveContainer width="100%" height={chartHeight}>
         <BarChart
           data={chartData}

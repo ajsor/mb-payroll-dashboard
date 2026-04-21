@@ -1,6 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  detailTable,
+  detailTableHeading,
+  closeDetailBtn,
+  detailSummary,
+  tableWrapper,
+  detailTableEl,
+  detailTh,
+  detailTd,
+  detailTdLast,
+  detailRowHover,
+  sortableHeader
+} from '../../styles/chartClasses';
 
 // Decode HTML entities like &#8482; to their actual symbols
 const decodeHtmlEntities = (text) => {
@@ -117,17 +134,17 @@ const PopularClassesChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Top 10 Most Popular Classes</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Top 10 Most Popular Classes</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Top 10 Most Popular Classes</h3>
-      <p className="chart-subtitle">Ranked by average attendance (w/40+ sessions) - Click on a bar to view sessions</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Top 10 Most Popular Classes</h3>
+      <p className={chartSubtitle}>Ranked by average attendance (w/40+ sessions) - Click on a bar to view sessions</p>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}
@@ -183,42 +200,42 @@ const PopularClassesChart = () => {
       </ResponsiveContainer>
 
       {selectedClassData && (
-        <div className="instructor-detail-table">
-          <h4>
+        <div className={detailTable}>
+          <h4 className={detailTableHeading}>
             Sessions for {decodeHtmlEntities(selectedClass)}
             <button
-              className="close-detail-btn"
+              className={closeDetailBtn}
               onClick={() => setSelectedClass(null)}
             >
               Close
             </button>
           </h4>
-          <p className="detail-summary">
+          <p className={detailSummary}>
             {selectedClassData.sessionCount} sessions |
             Total Attendance: {selectedClassData.totalAttendance} |
             Average: {selectedClassData.avgAttendance.toFixed(1)}
           </p>
-          <div className="table-wrapper">
-            <table>
+          <div className={tableWrapper}>
+            <table className={detailTableEl}>
               <thead>
                 <tr>
-                  <th onClick={() => handleSort('classDate')} className="sortable-header">
+                  <th onClick={() => handleSort('classDate')} className={`${detailTh} ${sortableHeader}`}>
                     Class Date{getSortIndicator('classDate')}
                   </th>
-                  <th onClick={() => handleSort('instructorName')} className="sortable-header">
+                  <th onClick={() => handleSort('instructorName')} className={`${detailTh} ${sortableHeader}`}>
                     Instructor{getSortIndicator('instructorName')}
                   </th>
-                  <th onClick={() => handleSort('attendance')} className="sortable-header">
+                  <th onClick={() => handleSort('attendance')} className={`${detailTh} ${sortableHeader}`}>
                     Attendance{getSortIndicator('attendance')}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {sortedSessions.map((session, idx) => (
-                  <tr key={idx}>
-                    <td>{session.classDate}</td>
-                    <td>{session.instructorName}</td>
-                    <td>{session.attendance}</td>
+                  <tr key={idx} className={detailRowHover}>
+                    <td className={detailTd}>{session.classDate}</td>
+                    <td className={detailTd}>{session.instructorName}</td>
+                    <td className={detailTdLast}>{session.attendance}</td>
                   </tr>
                 ))}
               </tbody>

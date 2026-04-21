@@ -10,6 +10,7 @@ import {
   Cell
 } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty } from '../../styles/chartClasses';
 
 const COLORS = [
   '#6366f1', '#8b5cf6', '#a855f7', '#d946ef',
@@ -45,17 +46,17 @@ const ReferralSourceChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Referral Sources</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Referral Sources</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Referral Sources</h3>
-      <p className="chart-subtitle">How new clients discover you</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Referral Sources</h3>
+      <p className={chartSubtitle}>How new clients discover you</p>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}

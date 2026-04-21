@@ -1,6 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  detailTable,
+  detailTableHeading,
+  closeDetailBtn,
+  detailSummary,
+  tableWrapper,
+  detailTableEl,
+  detailTh,
+  detailTd,
+  detailTdLast,
+  detailRowHover,
+  sortableHeader
+} from '../../styles/chartClasses';
 
 // Decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -117,17 +134,17 @@ const InstructorConsistencyChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Instructor Consistency</h3>
-        <div className="chart-empty">No data available (need at least 3 sessions per instructor)</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Instructor Consistency</h3>
+        <div className={chartEmpty}>No data available (need at least 3 sessions per instructor)</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Instructor Consistency</h3>
-      <p className="chart-subtitle">X: Avg Attendance | Y: Consistency Score (higher = more consistent) | Click to view details</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Instructor Consistency</h3>
+      <p className={chartSubtitle}>X: Avg Attendance | Y: Consistency Score (higher = more consistent) | Click to view details</p>
       <ResponsiveContainer width="100%" height={400}>
         <ScatterChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -184,31 +201,31 @@ const InstructorConsistencyChart = () => {
       </ResponsiveContainer>
 
       {selectedInstructorData && (
-        <div className="instructor-detail-table">
-          <h4>
+        <div className={detailTable}>
+          <h4 className={detailTableHeading}>
             {selectedInstructor} - Consistency: {selectedInstructorData.consistency}%
-            <button className="close-detail-btn" onClick={() => setSelectedInstructor(null)}>Close</button>
+            <button className={closeDetailBtn} onClick={() => setSelectedInstructor(null)}>Close</button>
           </h4>
-          <p className="detail-summary">
+          <p className={detailSummary}>
             {selectedInstructorData.sessionCount} sessions |
             Avg: {selectedInstructorData.avgAttendance} |
             Std Dev: {selectedInstructorData.stdDev}
           </p>
-          <div className="table-wrapper">
-            <table>
+          <div className={tableWrapper}>
+            <table className={detailTableEl}>
               <thead>
                 <tr>
-                  <th onClick={() => handleSort('classDate')} className="sortable-header">Date{getSortIndicator('classDate')}</th>
-                  <th onClick={() => handleSort('className')} className="sortable-header">Class{getSortIndicator('className')}</th>
-                  <th onClick={() => handleSort('attendance')} className="sortable-header">Attendance{getSortIndicator('attendance')}</th>
+                  <th onClick={() => handleSort('classDate')} className={`${detailTh} ${sortableHeader}`}>Date{getSortIndicator('classDate')}</th>
+                  <th onClick={() => handleSort('className')} className={`${detailTh} ${sortableHeader}`}>Class{getSortIndicator('className')}</th>
+                  <th onClick={() => handleSort('attendance')} className={`${detailTh} ${sortableHeader}`}>Attendance{getSortIndicator('attendance')}</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedClasses.map((cls, idx) => (
-                  <tr key={idx}>
-                    <td>{cls.classDate}</td>
-                    <td>{cls.className}</td>
-                    <td>{cls.attendance}</td>
+                  <tr key={idx} className={detailRowHover}>
+                    <td className={detailTd}>{cls.classDate}</td>
+                    <td className={detailTd}>{cls.className}</td>
+                    <td className={detailTdLast}>{cls.attendance}</td>
                   </tr>
                 ))}
               </tbody>

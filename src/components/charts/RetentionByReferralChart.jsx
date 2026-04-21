@@ -10,6 +10,7 @@ import {
   Cell
 } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty } from '../../styles/chartClasses';
 
 const RetentionByReferralChart = () => {
   const { filteredFirstVisitData } = usePayroll();
@@ -65,17 +66,17 @@ const RetentionByReferralChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Retention by Referral Source</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Retention by Referral Source</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Retention by Referral Source</h3>
-      <p className="chart-subtitle">Average return visits by how clients found you (min 10 clients)</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Retention by Referral Source</h3>
+      <p className={chartSubtitle}>Average return visits by how clients found you (min 10 clients)</p>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}

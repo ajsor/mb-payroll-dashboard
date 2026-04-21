@@ -2,6 +2,23 @@ import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
 import { formatCurrency } from '../../utils/dataProcessor';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  detailTable,
+  detailTableHeading,
+  closeDetailBtn,
+  detailSummary,
+  tableWrapper,
+  detailTableEl,
+  detailTh,
+  detailTd,
+  detailTdLast,
+  detailRowHover,
+  sortableHeader
+} from '../../styles/chartClasses';
 
 // Decode HTML entities like &#8482; to their actual symbols
 const decodeHtmlEntities = (text) => {
@@ -113,17 +130,17 @@ const TopEarnersChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Top 10 Earners</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Top 10 Earners</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Top 10 Earners</h3>
-      <p className="chart-subtitle">Click on a bar to view class details</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Top 10 Earners</h3>
+      <p className={chartSubtitle}>Click on a bar to view class details</p>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}
@@ -179,41 +196,41 @@ const TopEarnersChart = () => {
       </ResponsiveContainer>
 
       {selectedInstructorData && (
-        <div className="instructor-detail-table">
-          <h4>
+        <div className={detailTable}>
+          <h4 className={detailTableHeading}>
             Sessions for {selectedInstructor}
             <button
-              className="close-detail-btn"
+              className={closeDetailBtn}
               onClick={() => setSelectedInstructor(null)}
             >
               Close
             </button>
           </h4>
-          <p className="detail-summary">
+          <p className={detailSummary}>
             {selectedInstructorData.sessionCount} sessions |
             Total Earnings: {formatCurrency(selectedInstructorData.totalEarnings)}
           </p>
-          <div className="table-wrapper">
-            <table>
+          <div className={tableWrapper}>
+            <table className={detailTableEl}>
               <thead>
                 <tr>
-                  <th onClick={() => handleSort('classDate')} className="sortable-header">
+                  <th onClick={() => handleSort('classDate')} className={`${detailTh} ${sortableHeader}`}>
                     Class Date{getSortIndicator('classDate')}
                   </th>
-                  <th onClick={() => handleSort('className')} className="sortable-header">
+                  <th onClick={() => handleSort('className')} className={`${detailTh} ${sortableHeader}`}>
                     Class Name{getSortIndicator('className')}
                   </th>
-                  <th onClick={() => handleSort('earnings')} className="sortable-header">
+                  <th onClick={() => handleSort('earnings')} className={`${detailTh} ${sortableHeader}`}>
                     Earnings{getSortIndicator('earnings')}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {sortedClasses.map((cls, idx) => (
-                  <tr key={idx}>
-                    <td>{cls.classDate}</td>
-                    <td>{decodeHtmlEntities(cls.className)}</td>
-                    <td>{formatCurrency(cls.earnings)}</td>
+                  <tr key={idx} className={detailRowHover}>
+                    <td className={detailTd}>{cls.classDate}</td>
+                    <td className={detailTd}>{decodeHtmlEntities(cls.className)}</td>
+                    <td className={detailTdLast}>{formatCurrency(cls.earnings)}</td>
                   </tr>
                 ))}
               </tbody>

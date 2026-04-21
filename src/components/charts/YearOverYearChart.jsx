@@ -1,6 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartEmpty,
+  chartControls,
+  chartControlsLabel,
+  chartControlsSelect
+} from '../../styles/chartClasses';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const COLORS = ['#667eea', '#764ba2', '#2e7d32', '#d32f2f', '#f57c00', '#0288d1', '#7b1fa2', '#c2185b'];
@@ -87,19 +95,19 @@ const YearOverYearChart = () => {
 
   if (chartData.length === 0 || years.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Year-over-Year Comparison</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Year-over-Year Comparison</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Year-over-Year Comparison</h3>
-      <div className="chart-controls">
-        <label>Metric: </label>
-        <select value={metric} onChange={(e) => setMetric(e.target.value)}>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Year-over-Year Comparison</h3>
+      <div className={chartControls}>
+        <label className={chartControlsLabel}>Metric: </label>
+        <select className={chartControlsSelect} value={metric} onChange={(e) => setMetric(e.target.value)}>
           <option value="attendance">Avg Attendance</option>
           <option value="sessions">Sessions</option>
           <option value="payroll">Payroll</option>

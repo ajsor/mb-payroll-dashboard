@@ -1,6 +1,21 @@
 import React, { useMemo, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  chartControls,
+  chartControlsLabel,
+  chartControlsSelect,
+  underperformingTable,
+  underperformingTableEl,
+  underperformingTh,
+  underperformingTd,
+  detailRowHover,
+  sortableHeader
+} from '../../styles/chartClasses';
 
 // Decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -163,19 +178,19 @@ const UnderperformingClassesChart = () => {
 
   if (currentData.length === 0 && belowAvgClasses.length === 0 && decliningClasses.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Underperforming Classes</h3>
-        <div className="chart-empty">No underperforming classes found</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Underperforming Classes</h3>
+        <div className={chartEmpty}>No underperforming classes found</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Underperforming Classes</h3>
-      <div className="chart-controls">
-        <label>View: </label>
-        <select value={viewType} onChange={(e) => setViewType(e.target.value)}>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Underperforming Classes</h3>
+      <div className={chartControls}>
+        <label className={chartControlsLabel}>View: </label>
+        <select className={chartControlsSelect} value={viewType} onChange={(e) => setViewType(e.target.value)}>
           <option value="belowAvg">Below Average Attendance ({belowAvgClasses.length})</option>
           <option value="declining">Declining Attendance ({decliningClasses.length})</option>
         </select>
@@ -183,7 +198,7 @@ const UnderperformingClassesChart = () => {
 
       {viewType === 'belowAvg' ? (
         <>
-          <p className="chart-subtitle">
+          <p className={chartSubtitle}>
             Classes with attendance below the overall average of {overallAvg}
           </p>
 
@@ -244,31 +259,31 @@ const UnderperformingClassesChart = () => {
                 </BarChart>
               </ResponsiveContainer>
 
-              <div className="underperforming-table">
-                <table>
+              <div className={underperformingTable}>
+                <table className={underperformingTableEl}>
                   <thead>
                     <tr>
-                      <th onClick={() => handleSort('name')} className="sortable-header">
+                      <th onClick={() => handleSort('name')} className={`${underperformingTh} ${sortableHeader}`}>
                         Class Name{getSortIndicator('name')}
                       </th>
-                      <th onClick={() => handleSort('avgAttendance')} className="sortable-header">
+                      <th onClick={() => handleSort('avgAttendance')} className={`${underperformingTh} ${sortableHeader}`}>
                         Avg Attendance{getSortIndicator('avgAttendance')}
                       </th>
-                      <th onClick={() => handleSort('percentOfAvg')} className="sortable-header">
+                      <th onClick={() => handleSort('percentOfAvg')} className={`${underperformingTh} ${sortableHeader}`}>
                         % of Avg{getSortIndicator('percentOfAvg')}
                       </th>
-                      <th onClick={() => handleSort('sessions')} className="sortable-header">
+                      <th onClick={() => handleSort('sessions')} className={`${underperformingTh} ${sortableHeader}`}>
                         Sessions{getSortIndicator('sessions')}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {sortedBelowAvg.map((cls, idx) => (
-                      <tr key={idx}>
-                        <td>{cls.name}</td>
-                        <td style={{ color: '#d32f2f', fontWeight: 600 }}>{cls.avgAttendance}</td>
-                        <td>{cls.percentOfAvg}%</td>
-                        <td>{cls.sessions}</td>
+                      <tr key={idx} className={detailRowHover}>
+                        <td className={underperformingTd}>{cls.name}</td>
+                        <td className={underperformingTd} style={{ color: '#d32f2f', fontWeight: 600 }}>{cls.avgAttendance}</td>
+                        <td className={underperformingTd}>{cls.percentOfAvg}%</td>
+                        <td className={underperformingTd}>{cls.sessions}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -276,12 +291,12 @@ const UnderperformingClassesChart = () => {
               </div>
             </>
           ) : (
-            <div className="chart-empty">No classes below average attendance</div>
+            <div className={chartEmpty}>No classes below average attendance</div>
           )}
         </>
       ) : (
         <>
-          <p className="chart-subtitle">
+          <p className={chartSubtitle}>
             Classes showing decline comparing first half to second half of period
           </p>
 
@@ -345,35 +360,35 @@ const UnderperformingClassesChart = () => {
                 </BarChart>
               </ResponsiveContainer>
 
-              <div className="underperforming-table">
-                <table>
+              <div className={underperformingTable}>
+                <table className={underperformingTableEl}>
                   <thead>
                     <tr>
-                      <th onClick={() => handleSort('name')} className="sortable-header">
+                      <th onClick={() => handleSort('name')} className={`${underperformingTh} ${sortableHeader}`}>
                         Class Name{getSortIndicator('name')}
                       </th>
-                      <th onClick={() => handleSort('changePercent')} className="sortable-header">
+                      <th onClick={() => handleSort('changePercent')} className={`${underperformingTh} ${sortableHeader}`}>
                         Change{getSortIndicator('changePercent')}
                       </th>
-                      <th onClick={() => handleSort('firstAvg')} className="sortable-header">
+                      <th onClick={() => handleSort('firstAvg')} className={`${underperformingTh} ${sortableHeader}`}>
                         First Half{getSortIndicator('firstAvg')}
                       </th>
-                      <th onClick={() => handleSort('secondAvg')} className="sortable-header">
+                      <th onClick={() => handleSort('secondAvg')} className={`${underperformingTh} ${sortableHeader}`}>
                         Second Half{getSortIndicator('secondAvg')}
                       </th>
-                      <th onClick={() => handleSort('sessions')} className="sortable-header">
+                      <th onClick={() => handleSort('sessions')} className={`${underperformingTh} ${sortableHeader}`}>
                         Sessions{getSortIndicator('sessions')}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {sortedDeclining.map((cls, idx) => (
-                      <tr key={idx}>
-                        <td>{cls.name}</td>
-                        <td style={{ color: '#d32f2f', fontWeight: 600 }}>{cls.changePercent}%</td>
-                        <td>{cls.firstAvg}</td>
-                        <td>{cls.secondAvg}</td>
-                        <td>{cls.sessions}</td>
+                      <tr key={idx} className={detailRowHover}>
+                        <td className={underperformingTd}>{cls.name}</td>
+                        <td className={underperformingTd} style={{ color: '#d32f2f', fontWeight: 600 }}>{cls.changePercent}%</td>
+                        <td className={underperformingTd}>{cls.firstAvg}</td>
+                        <td className={underperformingTd}>{cls.secondAvg}</td>
+                        <td className={underperformingTd}>{cls.sessions}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -381,7 +396,7 @@ const UnderperformingClassesChart = () => {
               </div>
             </>
           ) : (
-            <div className="chart-empty">No significantly declining classes found</div>
+            <div className={chartEmpty}>No significantly declining classes found</div>
           )}
         </>
       )}

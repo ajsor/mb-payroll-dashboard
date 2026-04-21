@@ -1,6 +1,16 @@
 import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  peakHoursCharts,
+  peakHoursSectionH4,
+  insightsRecommendations,
+  recommendationBadge
+} from '../../styles/chartClasses';
 
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -135,29 +145,29 @@ const PeakHoursChart = () => {
 
   if (hourlyData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Peak Hours Analysis</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Peak Hours Analysis</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Peak Hours Analysis</h3>
-      <p className="chart-subtitle">Optimal scheduling times based on average attendance (overall avg: {overallAvg})</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Peak Hours Analysis</h3>
+      <p className={chartSubtitle}>Optimal scheduling times based on average attendance (overall avg: {overallAvg})</p>
 
       {recommendations.length > 0 && (
-        <div className="insights-recommendations">
+        <div className={insightsRecommendations}>
           {recommendations.map((rec, idx) => (
-            <span key={idx} className="recommendation-badge">{rec}</span>
+            <span key={idx} className={recommendationBadge}>{rec}</span>
           ))}
         </div>
       )}
 
-      <div className="peak-hours-charts">
-        <div className="peak-hours-section">
-          <h4>By Hour of Day</h4>
+      <div className={peakHoursCharts}>
+        <div>
+          <h4 className={peakHoursSectionH4}>By Hour of Day</h4>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={hourlyData} margin={{ top: 10, right: 20, left: 0, bottom: 30 }}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -204,8 +214,8 @@ const PeakHoursChart = () => {
           </ResponsiveContainer>
         </div>
 
-        <div className="peak-hours-section">
-          <h4>By Day of Week</h4>
+        <div>
+          <h4 className={peakHoursSectionH4}>By Day of Week</h4>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={dailyData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
               <CartesianGrid strokeDasharray="3 3" />

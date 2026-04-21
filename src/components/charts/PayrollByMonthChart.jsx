@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
 import { formatCurrency } from '../../utils/dataProcessor';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty } from '../../styles/chartClasses';
 
 const PayrollByMonthChart = () => {
   const { filteredPayrollData } = usePayroll();
@@ -49,17 +50,17 @@ const PayrollByMonthChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Payroll by Month</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Payroll by Month</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Payroll by Month</h3>
-      <p className="chart-subtitle">Total payroll per month</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Payroll by Month</h3>
+      <p className={chartSubtitle}>Total payroll per month</p>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
           <CartesianGrid strokeDasharray="3 3" />

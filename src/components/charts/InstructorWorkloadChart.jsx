@@ -1,6 +1,13 @@
 import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  scrollableChartWrapper
+} from '../../styles/chartClasses';
 
 // Decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -38,9 +45,9 @@ const InstructorWorkloadChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Instructor Workload</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Instructor Workload</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
@@ -49,10 +56,10 @@ const InstructorWorkloadChart = () => {
   const chartHeight = Math.max(400, chartData.length * 35);
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Instructor Workload</h3>
-      <p className="chart-subtitle">All {chartData.length} instructors by number of sessions (scroll to see more)</p>
-      <div className="scrollable-chart-wrapper">
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Instructor Workload</h3>
+      <p className={chartSubtitle}>All {chartData.length} instructors by number of sessions (scroll to see more)</p>
+      <div className={scrollableChartWrapper}>
         <div style={{ height: chartHeight }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart

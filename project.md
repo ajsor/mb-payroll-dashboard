@@ -87,6 +87,12 @@ Port 5177 is in use, trying another one...
 
 ## Changelog
 
+### 2026-04-20 (2) - Phase 4b-ii slice 2b: Tailwind for all 23 chart components
+- Converted every chart component from `Dashboard.css` classes to Tailwind utilities via a shared `src/styles/chartClasses.js` constants module. Migrated: PayrollByMonth, SessionsByMonth, NewClientsByMonth, NewClientsByCategory, ReferralSource, AttendanceTrends, RetentionByClass, RetentionByClassName, RetentionByInstructor, RetentionByReferral, RetentionFunnel, TopEarners, TopAttendance, InstructorConsistency, PopularClasses, AttendanceGrowth, YearOverYear, UnderperformingClasses, InstructorWorkload, ClassFrequency, AttendanceHeatmap, InstructorComparison, PeakHours.
+- `Dashboard.css` deleted entirely (from 827 lines to 0). Its survivors live in `src/index.css` now: global reset, body, `@keyframes dialogSlideIn`, and a minimal print rule. The `.app` class became `min-h-screen`. `.spin` became Tailwind's built-in `animate-spin`. `.charts-section` and `.charts-grid-row` became inline Tailwind grid utilities in `Dashboard.jsx`. No `import './styles/Dashboard.css'` remains.
+- Build: CSS bundle 49 KB to 44 KB gzipped 8.2 KB. Build time ~5s.
+- Dark mode preserved via the existing `body.dark-mode` JS toggle and `@custom-variant dark (&:where(body.dark-mode *, .dark, .dark *))` in index.css.
+
 ### 2026-04-20 - Phase 4b-ii slice 2a: Tailwind for upload + dashboard chrome
 - Converted 12 chrome components from `Dashboard.css` classes to Tailwind utilities: `FileDropzone`, `FirstVisitDropzone`, `LogoDropzone`, `FileUploadContainer`, `Dashboard`, `TopToolbar`, `DateRangeFilter`, `InstructorFilter`, `ServiceCategoryFilter`, `SummaryCardsSectionModern`, `ClientSummaryCards`, `HelpDialog`. Visual parity preserved; indigo/violet palette unchanged.
 - Dark mode kept on the existing `document.body.classList.toggle('dark-mode')` mechanism. `src/index.css` now declares `@custom-variant dark (&:where(body.dark-mode *, .dark, .dark *))` so both the dashboard (`body.dark-mode`) and the auth pages (`.dark` on `<html>`) light up Tailwind `dark:` utilities.

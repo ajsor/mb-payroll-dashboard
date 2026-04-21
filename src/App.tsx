@@ -1,12 +1,11 @@
 import { PayrollProvider, usePayroll } from './context/PayrollContext'
 import FileUploadContainer from './components/upload/FileUploadContainer'
 import Dashboard from './components/dashboard/Dashboard'
-import './styles/Dashboard.css'
 
 function AppContent() {
   const { currentView } = usePayroll() as { currentView: 'upload' | 'dashboard' }
   return (
-    <div className="app">
+    <div className="min-h-screen">
       {currentView === 'upload' ? <FileUploadContainer /> : <Dashboard />}
     </div>
   )

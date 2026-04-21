@@ -135,7 +135,7 @@ const Dashboard = () => {
           <>
             <SummaryCardsSectionModern />
 
-            <div className="charts-section">
+            <div className="grid [grid-template-columns:repeat(auto-fit,minmax(500px,1fr))] gap-8">
               {shouldShowPayrollChart(['Payroll']) && <TopEarnersChart />}
               {shouldShowPayrollChart(['Payroll']) && <PayrollByMonthChart />}
 
@@ -163,17 +163,17 @@ const Dashboard = () => {
           <>
             <ClientSummaryCards />
 
-            <div className="charts-section">
+            <div className="grid [grid-template-columns:repeat(auto-fit,minmax(500px,1fr))] gap-8">
               {shouldShowClientChart(['Acquisition']) && <NewClientsByMonthChart />}
               {shouldShowClientChart(['Acquisition']) && <NewClientsByCategoryChart />}
 
               {shouldShowClientChart(['Retention']) && (
                 <>
-                  <div className="charts-grid-row">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 [grid-column:1/-1]">
                     <RetentionFunnelChart />
                     <RetentionByClassChart />
                   </div>
-                  <div className="charts-grid-row">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 [grid-column:1/-1]">
                     <RetentionByInstructorChart />
                     <RetentionByClassNameChart />
                   </div>

@@ -12,6 +12,7 @@ import {
   ZAxis
 } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty, chartScrollable, chartScrollArea } from '../../styles/chartClasses';
 
 const RetentionByInstructorChart = () => {
   const { filteredFirstVisitData } = usePayroll();
@@ -68,9 +69,9 @@ const RetentionByInstructorChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Retention by Instructor</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Retention by Instructor</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
@@ -78,10 +79,10 @@ const RetentionByInstructorChart = () => {
   const chartHeight = Math.max(350, chartData.length * 28 + 80);
 
   return (
-    <div className="chart-container chart-scrollable">
-      <h3 className="chart-title">Retention by Instructor</h3>
-      <p className="chart-subtitle">Average return visits by instructor (dot size = client volume)</p>
-      <div className="chart-scroll-area" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+    <div className={`${chartContainer} ${chartScrollable}`}>
+      <h3 className={chartTitle}>Retention by Instructor</h3>
+      <p className={chartSubtitle}>Average return visits by instructor (dot size = client volume)</p>
+      <div className={`${chartScrollArea} max-h-[400px]`}>
         <ResponsiveContainer width="100%" height={chartHeight}>
           <ComposedChart
             data={chartData}

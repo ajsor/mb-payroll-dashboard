@@ -2,6 +2,25 @@ import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
 import { formatCurrency } from '../../utils/dataProcessor';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  comparisonInstructorSelector,
+  instructorChips,
+  instructorChip,
+  instructorChipSelected,
+  moreInstructors,
+  comparisonCharts,
+  comparisonSectionH4,
+  comparisonPlaceholder,
+  comparisonTableWrapper,
+  comparisonTable,
+  comparisonTh,
+  comparisonTd,
+  detailRowHover
+} from '../../styles/chartClasses';
 
 // Decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -162,24 +181,24 @@ const InstructorComparisonChart = () => {
 
   if (instructorList.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Instructor Comparison</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Instructor Comparison</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Instructor Comparison</h3>
-      <p className="chart-subtitle">Select 2-4 instructors to compare (click to toggle)</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Instructor Comparison</h3>
+      <p className={chartSubtitle}>Select 2-4 instructors to compare (click to toggle)</p>
 
-      <div className="comparison-instructor-selector">
-        <div className="instructor-chips">
+      <div className={comparisonInstructorSelector}>
+        <div className={instructorChips}>
           {instructorList.slice(0, 20).map((instructor, idx) => (
             <button
               key={instructor.rawName}
-              className={`instructor-chip ${selectedInstructors.includes(instructor.rawName) ? 'selected' : ''}`}
+              className={`${instructorChip} ${selectedInstructors.includes(instructor.rawName) ? instructorChipSelected : ''}`}
               style={selectedInstructors.includes(instructor.rawName) ? {
                 backgroundColor: COLORS[selectedInstructors.indexOf(instructor.rawName) % COLORS.length],
                 borderColor: COLORS[selectedInstructors.indexOf(instructor.rawName) % COLORS.length]
@@ -190,15 +209,15 @@ const InstructorComparisonChart = () => {
             </button>
           ))}
           {instructorList.length > 20 && (
-            <span className="more-instructors">+{instructorList.length - 20} more</span>
+            <span className={moreInstructors}>+{instructorList.length - 20} more</span>
           )}
         </div>
       </div>
 
       {comparisonData && comparisonData.selected.length >= 2 ? (
-        <div className="comparison-charts">
-          <div className="comparison-section">
-            <h4>Performance Radar</h4>
+        <div className={comparisonCharts}>
+          <div>
+            <h4 className={comparisonSectionH4}>Performance Radar</h4>
             <ResponsiveContainer width="100%" height={300}>
               <RadarChart data={comparisonData.radarData}>
                 <PolarGrid />
@@ -219,29 +238,29 @@ const InstructorComparisonChart = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="comparison-section">
-            <h4>Summary Comparison</h4>
-            <div className="comparison-table-wrapper">
-              <table className="comparison-table">
+          <div>
+            <h4 className={comparisonSectionH4}>Summary Comparison</h4>
+            <div className={comparisonTableWrapper}>
+              <table className={comparisonTable}>
                 <thead>
                   <tr>
-                    <th>Instructor</th>
-                    <th>Sessions</th>
-                    <th>Avg Attendance</th>
-                    <th>Total Earnings</th>
-                    <th>Consistency</th>
-                    <th>Classes Taught</th>
+                    <th className={comparisonTh}>Instructor</th>
+                    <th className={comparisonTh}>Sessions</th>
+                    <th className={comparisonTh}>Avg Attendance</th>
+                    <th className={comparisonTh}>Total Earnings</th>
+                    <th className={comparisonTh}>Consistency</th>
+                    <th className={comparisonTh}>Classes Taught</th>
                   </tr>
                 </thead>
                 <tbody>
                   {comparisonData.summaryData.map((row, idx) => (
-                    <tr key={row.name} style={{ borderLeft: `4px solid ${COLORS[idx % COLORS.length]}` }}>
-                      <td style={{ fontWeight: 600 }}>{row.name}</td>
-                      <td>{row.sessions}</td>
-                      <td>{row.avgAttendance}</td>
-                      <td>{formatCurrency(row.totalEarnings)}</td>
-                      <td>{row.consistency}%</td>
-                      <td>{row.uniqueClasses}</td>
+                    <tr key={row.name} className={detailRowHover} style={{ borderLeft: `4px solid ${COLORS[idx % COLORS.length]}` }}>
+                      <td className={comparisonTd} style={{ fontWeight: 600 }}>{row.name}</td>
+                      <td className={comparisonTd}>{row.sessions}</td>
+                      <td className={comparisonTd}>{row.avgAttendance}</td>
+                      <td className={comparisonTd}>{formatCurrency(row.totalEarnings)}</td>
+                      <td className={comparisonTd}>{row.consistency}%</td>
+                      <td className={comparisonTd}>{row.uniqueClasses}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -250,7 +269,7 @@ const InstructorComparisonChart = () => {
           </div>
         </div>
       ) : (
-        <div className="comparison-placeholder">
+        <div className={comparisonPlaceholder}>
           <p>Select at least 2 instructors above to see comparison</p>
         </div>
       )}

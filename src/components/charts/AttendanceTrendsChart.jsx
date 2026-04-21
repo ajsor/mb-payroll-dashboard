@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty } from '../../styles/chartClasses';
 
 const AttendanceTrendsChart = () => {
   const { filteredPayrollData } = usePayroll();
@@ -50,17 +51,17 @@ const AttendanceTrendsChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Attendance Trends</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Attendance Trends</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Attendance Trends</h3>
-      <p className="chart-subtitle">Average attendance per class by month</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Attendance Trends</h3>
+      <p className={chartSubtitle}>Average attendance per class by month</p>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
           <CartesianGrid strokeDasharray="3 3" />

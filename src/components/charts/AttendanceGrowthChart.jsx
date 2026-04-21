@@ -1,6 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  chartControls,
+  chartControlsLabel,
+  chartControlsSelect
+} from '../../styles/chartClasses';
 
 // Decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -85,24 +94,24 @@ const AttendanceGrowthChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Attendance Growth/Decline</h3>
-        <div className="chart-empty">Not enough data (need multiple months)</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Attendance Growth/Decline</h3>
+        <div className={chartEmpty}>Not enough data (need multiple months)</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Attendance Growth/Decline</h3>
-      <div className="chart-controls">
-        <label>View: </label>
-        <select value={viewType} onChange={(e) => setViewType(e.target.value)}>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Attendance Growth/Decline</h3>
+      <div className={chartControls}>
+        <label className={chartControlsLabel}>View: </label>
+        <select className={chartControlsSelect} value={viewType} onChange={(e) => setViewType(e.target.value)}>
           <option value="instructors">Instructors</option>
           <option value="classes">Classes</option>
         </select>
       </div>
-      <p className="chart-subtitle">Top 5 growing and declining (comparing first half vs second half of period)</p>
+      <p className={chartSubtitle}>Top 5 growing and declining (comparing first half vs second half of period)</p>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart
           data={chartData}

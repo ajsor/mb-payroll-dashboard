@@ -1,5 +1,32 @@
 import React, { useState, useMemo } from 'react';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  detailTable,
+  detailTableHeading,
+  closeDetailBtn,
+  detailSummary,
+  tableWrapper,
+  detailTableEl,
+  detailTh,
+  detailTd,
+  detailTdLast,
+  detailRowHover,
+  sortableHeader,
+  heatmapWrapper,
+  heatmapTable,
+  heatmapHeaderCell,
+  heatmapTimeCell,
+  heatmapCell,
+  heatmapCellClickable,
+  heatmapCellSelected,
+  heatmapLegend,
+  legendScale,
+  legendScaleBox
+} from '../../styles/chartClasses';
 
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -181,32 +208,32 @@ const AttendanceHeatmap = () => {
 
   if (!filteredPayrollData || filteredPayrollData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Average Attendance by Day & Time</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Average Attendance by Day & Time</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Average Attendance by Day & Time</h3>
-      <p className="chart-subtitle">Darker colors indicate higher average attendance</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Average Attendance by Day & Time</h3>
+      <p className={chartSubtitle}>Darker colors indicate higher average attendance</p>
 
-      <div className="heatmap-wrapper">
-        <table className="heatmap-table">
+      <div className={heatmapWrapper}>
+        <table className={heatmapTable}>
           <thead>
             <tr>
-              <th className="heatmap-header-cell">Time</th>
+              <th className={heatmapHeaderCell}>Time</th>
               {DAYS_OF_WEEK.map(day => (
-                <th key={day} className="heatmap-header-cell">{day.slice(0, 3)}</th>
+                <th key={day} className={heatmapHeaderCell}>{day.slice(0, 3)}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {HOURS.map(hour => (
               <tr key={hour}>
-                <td className="heatmap-time-cell">{formatHour(hour)}</td>
+                <td className={heatmapTimeCell}>{formatHour(hour)}</td>
                 {DAYS_OF_WEEK.map((_, dayIndex) => {
                   const key = `${dayIndex}-${hour}`;
                   const cellData = heatmapData[key];
@@ -217,7 +244,7 @@ const AttendanceHeatmap = () => {
                   return (
                     <td
                       key={dayIndex}
-                      className={`heatmap-cell ${count > 0 ? 'heatmap-cell-clickable' : ''} ${isSelected ? 'heatmap-cell-selected' : ''}`}
+                      className={`${heatmapCell} ${count > 0 ? heatmapCellClickable : ''} ${isSelected ? heatmapCellSelected : ''}`}
                       style={{ backgroundColor: isSelected ? '#ff7300' : getHeatmapColor(avg, maxAvg) }}
                       title={avg !== null ? `Avg: ${avg.toFixed(1)} (${count} classes) - Click for details` : 'No classes'}
                       onClick={() => handleCellClick(dayIndex, hour, cellData)}
@@ -232,54 +259,54 @@ const AttendanceHeatmap = () => {
         </table>
       </div>
 
-      <div className="heatmap-legend">
+      <div className={heatmapLegend}>
         <span>Lower</span>
-        <div className="legend-scale">
-          <div style={{ backgroundColor: '#e3f2fd' }}></div>
-          <div style={{ backgroundColor: '#90caf9' }}></div>
-          <div style={{ backgroundColor: '#42a5f5' }}></div>
-          <div style={{ backgroundColor: '#1565c0' }}></div>
+        <div className={legendScale}>
+          <div className={legendScaleBox} style={{ backgroundColor: '#e3f2fd' }}></div>
+          <div className={legendScaleBox} style={{ backgroundColor: '#90caf9' }}></div>
+          <div className={legendScaleBox} style={{ backgroundColor: '#42a5f5' }}></div>
+          <div className={legendScaleBox} style={{ backgroundColor: '#1565c0' }}></div>
         </div>
         <span>Higher</span>
       </div>
 
       {selectedCellData && (
-        <div className="heatmap-detail-table">
-          <h4>
+        <div className={detailTable}>
+          <h4 className={detailTableHeading}>
             Classes on {DAYS_OF_WEEK[selectedCell.day]}s at {formatHour(selectedCell.hour)}
             <button
-              className="close-detail-btn"
+              className={closeDetailBtn}
               onClick={() => setSelectedCell(null)}
             >
               Close
             </button>
           </h4>
-          <p className="detail-summary">
+          <p className={detailSummary}>
             {selectedCellData.count} classes |
             Total Attendance: {selectedCellData.total} |
             Average: {selectedCellData.avg.toFixed(1)}
           </p>
-          <div className="table-wrapper">
-            <table>
+          <div className={tableWrapper}>
+            <table className={detailTableEl}>
               <thead>
                 <tr>
-                  <th onClick={() => handleSort('classDate')} className="sortable-header">
+                  <th onClick={() => handleSort('classDate')} className={`${detailTh} ${sortableHeader}`}>
                     Class Date{getSortIndicator('classDate')}
                   </th>
-                  <th onClick={() => handleSort('className')} className="sortable-header">
+                  <th onClick={() => handleSort('className')} className={`${detailTh} ${sortableHeader}`}>
                     Class Name{getSortIndicator('className')}
                   </th>
-                  <th onClick={() => handleSort('attendance')} className="sortable-header">
+                  <th onClick={() => handleSort('attendance')} className={`${detailTh} ${sortableHeader}`}>
                     Attendance{getSortIndicator('attendance')}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {sortedClasses.map((cls, idx) => (
-                  <tr key={idx}>
-                    <td>{cls.classDate}</td>
-                    <td>{cls.className}</td>
-                    <td>{cls.attendance}</td>
+                  <tr key={idx} className={detailRowHover}>
+                    <td className={detailTd}>{cls.classDate}</td>
+                    <td className={detailTd}>{cls.className}</td>
+                    <td className={detailTdLast}>{cls.attendance}</td>
                   </tr>
                 ))}
               </tbody>

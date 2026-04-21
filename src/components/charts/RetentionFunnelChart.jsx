@@ -8,6 +8,7 @@ import {
   Legend
 } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty } from '../../styles/chartClasses';
 
 const RetentionFunnelChart = () => {
   const { filteredFirstVisitData } = usePayroll();
@@ -46,9 +47,9 @@ const RetentionFunnelChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Client Retention</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Client Retention</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
@@ -93,9 +94,9 @@ const RetentionFunnelChart = () => {
   };
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Client Retention</h3>
-      <p className="chart-subtitle">Distribution of clients by number of return visits</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Client Retention</h3>
+      <p className={chartSubtitle}>Distribution of clients by number of return visits</p>
       <ResponsiveContainer width="100%" height={350}>
         <PieChart>
           <Pie
@@ -117,7 +118,7 @@ const RetentionFunnelChart = () => {
           <Legend content={renderLegend} />
         </PieChart>
       </ResponsiveContainer>
-      <div className="chart-summary" style={{ textAlign: 'center', marginTop: '0.5rem', color: '#6b7280', fontSize: '0.875rem' }}>
+      <div className="text-center mt-2 text-sm text-gray-500 dark:text-slate-400">
         <span><strong>{chartData[0]?.count || 0}</strong> ({chartData[0]?.percentage}%) never returned</span>
         <span style={{ margin: '0 1rem' }}>|</span>
         <span><strong>{total - (chartData[0]?.count || 0)}</strong> ({(100 - parseFloat(chartData[0]?.percentage || 0)).toFixed(1)}%) came back at least once</span>

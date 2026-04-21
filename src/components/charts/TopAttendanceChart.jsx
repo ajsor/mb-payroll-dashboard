@@ -1,6 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import {
+  chartContainer,
+  chartTitle,
+  chartSubtitle,
+  chartEmpty,
+  detailTable,
+  detailTableHeading,
+  closeDetailBtn,
+  detailSummary,
+  tableWrapper,
+  detailTableEl,
+  detailTh,
+  detailTd,
+  detailTdLast,
+  detailRowHover,
+  sortableHeader
+} from '../../styles/chartClasses';
 
 // Decode HTML entities like &#8482; to their actual symbols
 const decodeHtmlEntities = (text) => {
@@ -123,17 +140,17 @@ const TopAttendanceChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Top 10 Instructors by Average Class Attendance</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Top 10 Instructors by Average Class Attendance</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">Top 10 Instructors by Average Class Attendance</h3>
-      <p className="chart-subtitle">Click on a bar to view class details</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>Top 10 Instructors by Average Class Attendance</h3>
+      <p className={chartSubtitle}>Click on a bar to view class details</p>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}
@@ -189,42 +206,42 @@ const TopAttendanceChart = () => {
       </ResponsiveContainer>
 
       {selectedInstructorData && (
-        <div className="instructor-detail-table">
-          <h4>
+        <div className={detailTable}>
+          <h4 className={detailTableHeading}>
             Classes for {selectedInstructor}
             <button
-              className="close-detail-btn"
+              className={closeDetailBtn}
               onClick={() => setSelectedInstructor(null)}
             >
               Close
             </button>
           </h4>
-          <p className="detail-summary">
+          <p className={detailSummary}>
             {selectedInstructorData.classCount} classes |
             Total Attendance: {selectedInstructorData.totalAttendance} |
             Average: {selectedInstructorData.avgAttendance.toFixed(1)}
           </p>
-          <div className="table-wrapper">
-            <table>
+          <div className={tableWrapper}>
+            <table className={detailTableEl}>
               <thead>
                 <tr>
-                  <th onClick={() => handleSort('className')} className="sortable-header">
+                  <th onClick={() => handleSort('className')} className={`${detailTh} ${sortableHeader}`}>
                     Class Name{getSortIndicator('className')}
                   </th>
-                  <th onClick={() => handleSort('classDate')} className="sortable-header">
+                  <th onClick={() => handleSort('classDate')} className={`${detailTh} ${sortableHeader}`}>
                     Class Date{getSortIndicator('classDate')}
                   </th>
-                  <th onClick={() => handleSort('attendance')} className="sortable-header">
+                  <th onClick={() => handleSort('attendance')} className={`${detailTh} ${sortableHeader}`}>
                     Attendance{getSortIndicator('attendance')}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {sortedClasses.map((cls, idx) => (
-                  <tr key={idx}>
-                    <td>{decodeHtmlEntities(cls.className)}</td>
-                    <td>{cls.classDate}</td>
-                    <td>{cls.attendance}</td>
+                  <tr key={idx} className={detailRowHover}>
+                    <td className={detailTd}>{decodeHtmlEntities(cls.className)}</td>
+                    <td className={detailTd}>{cls.classDate}</td>
+                    <td className={detailTdLast}>{cls.attendance}</td>
                   </tr>
                 ))}
               </tbody>

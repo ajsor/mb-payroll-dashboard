@@ -10,6 +10,7 @@ import {
   Cell
 } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty } from '../../styles/chartClasses';
 
 const COLORS = [
   '#8b5cf6', '#6366f1', '#3b82f6', '#0ea5e9',
@@ -47,9 +48,9 @@ const NewClientsByCategoryChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">New Clients by Service Category</h3>
-        <div className="chart-empty">No data available</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>New Clients by Service Category</h3>
+        <div className={chartEmpty}>No data available</div>
       </div>
     );
   }
@@ -58,9 +59,9 @@ const NewClientsByCategoryChart = () => {
   const chartHeight = Math.max(350, chartData.length * 35 + 80);
 
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">New Clients by Service Category</h3>
-      <p className="chart-subtitle">Which services attract first-time clients</p>
+    <div className={chartContainer}>
+      <h3 className={chartTitle}>New Clients by Service Category</h3>
+      <p className={chartSubtitle}>Which services attract first-time clients</p>
       <ResponsiveContainer width="100%" height={chartHeight}>
         <BarChart
           data={chartData}

@@ -11,6 +11,7 @@ import {
   LabelList
 } from 'recharts';
 import { usePayroll } from '../../context/PayrollContext';
+import { chartContainer, chartTitle, chartSubtitle, chartEmpty, chartScrollable, chartScrollArea } from '../../styles/chartClasses';
 
 const MIN_CLIENTS = 5;
 
@@ -73,9 +74,9 @@ const RetentionByClassNameChart = () => {
 
   if (chartData.length === 0) {
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">Retention by Class</h3>
-        <div className="chart-empty">No classes with {MIN_CLIENTS}+ first-time clients</div>
+      <div className={chartContainer}>
+        <h3 className={chartTitle}>Retention by Class</h3>
+        <div className={chartEmpty}>No classes with {MIN_CLIENTS}+ first-time clients</div>
       </div>
     );
   }
@@ -84,12 +85,12 @@ const RetentionByClassNameChart = () => {
   const excludedCount = totalClasses - chartData.length;
 
   return (
-    <div className="chart-container chart-scrollable">
-      <h3 className="chart-title">Retention by Class</h3>
-      <p className="chart-subtitle">
+    <div className={`${chartContainer} ${chartScrollable}`}>
+      <h3 className={chartTitle}>Retention by Class</h3>
+      <p className={chartSubtitle}>
         Average return visits by class ({MIN_CLIENTS}+ clients) — showing {chartData.length} of {totalClasses} classes
       </p>
-      <div className="chart-scroll-area" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+      <div className={`${chartScrollArea} max-h-[400px]`}>
         <ResponsiveContainer width="100%" height={chartHeight}>
           <BarChart
             data={chartData}
