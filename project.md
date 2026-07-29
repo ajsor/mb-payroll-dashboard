@@ -76,8 +76,8 @@ Port 5177 is in use, trying another one...
 - Historical trend analysis
 
 ## Technical Stack
-- React 18 + Vite + **TypeScript**
-- **React Router v7** (createBrowserRouter, lazy routes)
+- React 18 + **Vite 8** + **TypeScript**
+- **React Router v7** (7.18.2 — createBrowserRouter, lazy routes)
 - **@stonecode/portal-sdk** — shared Supabase client, hash-token session bootstrap, portal launch URL builder
 - Supabase Auth (storageKey `mb-auth` to avoid collision with other `*.stonecode.ai` apps)
 - xlsx (SheetJS) - Excel parsing
@@ -86,6 +86,12 @@ Port 5177 is in use, trying another one...
 - Context API - State management
 
 ## Changelog
+
+### 2026-07-29 - Security dep bumps: Vite 8 + react-router-dom 7.18.2
+- **Vite 5 → 8.1.5** (+ `@vitejs/plugin-react` 4 → 6.0.4; `@tailwindcss/vite` 4.2.2 already compatible) — clears esbuild dev-server advisory GHSA-67mh-4wv8-2f99 (dev-only). Vite 8 runs on Rolldown; build verified clean (709 modules incl. the `excelParser` web worker).
+- **react-router-dom 7.1 → 7.18.2** (minor, no API changes) — clears the `__manifest` DoS GHSA-8x6r-g9mw-2r78 + open-redirect advisories.
+- Residual `npm audit` flag GHSA-qwww-vcr4-c8h2 is **RSC-framework-mode CSRF only** — not applicable to this client-only SPA; do NOT downgrade to "fix" it (7.11 re-exposes the open-redirect issues).
+- Both merged to `master` via PRs #1/#2.
 
 ### 2026-04-20 (3) - Bump GitHub Actions to v5 (Node 24 runtime)
 - `.github/workflows/deploy.yml`: `actions/checkout@v4` to `@v5`, `actions/setup-node@v4` to `@v5`. Silences the Node.js 20 deprecation warning GitHub emits on every run. Node.js 20 support is being removed from the runner on 2026-09-16; v5 of these actions runs on Node.js 24.
